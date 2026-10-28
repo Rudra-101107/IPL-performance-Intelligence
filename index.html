@@ -1,6 +1,190 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IPL Performance Intelligence</title><script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="/assets/styles-CzGjLY5V.css" data-precedence="default"/><title>IPL Performance Intelligence</title><meta name="author" content="Lovable"/><meta name="twitter:site" content="@Lovable"/><meta name="description" content="Interactive IPL insight dashboard with team, player and season analytics."/><meta property="og:title" content="IPL Performance Intelligence"/><meta property="og:description" content="Interactive IPL insight dashboard with team, player and season analytics."/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><link rel="modulepreload" href="/assets/index-_80g8HcA.js"/><link rel="modulepreload" href="/assets/routes-D6IBCu2m.js"/><link rel="icon" href="/favicon.ico" type="image/x-icon"/>
 <style>
+	#lovable-badge {
+		--badge-bg: #1b1b1b;
+		--badge-text: #c5c1b9;
+		--badge-text-hover: #dcdad5;
+		--badge-radius: 6px;
+		--badge-padding: 8px;
+		--badge-gap: 6px;
+		--badge-shadow: 
+			0 0 0 1px rgba(0, 0, 0, 0.88),
+			0 1px 0 0 rgba(0, 0, 0, 0.04),
+			0 2px 2px -1px rgba(0, 0, 0, 0.08),
+			0 4px 4px -2px rgba(0, 0, 0, 0.08),
+			0 8px 8px -4px rgba(0, 0, 0, 0.08),
+			0 16px 16px -8px rgba(0, 0, 0, 0.08);
+		--badge-transition-duration: 0.2s;
+		--badge-transition-easing: cubic-bezier(0.16, 1, 0.32, 1);
+		--focus-color: #575ECF;
+		--focus-offset: 2px;
+		--focus-width: 2px;
+		
+		position: fixed;
+		bottom: 12px;
+		right: 12px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		z-index: 1000000;
+		background-color: var(--badge-bg) !important;
+		color: var(--badge-text) !important;
+		border-radius: var(--badge-radius);
+		box-shadow: var(--badge-shadow) !important;
+		font-size: 12px;
+		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+		font-weight: 400 !important;
+		text-transform: none !important;
+		font-feature-settings: normal !important;
+		transform: translateZ(0);
+		will-change: transform, opacity;
+		transition: opacity var(--badge-transition-duration) var(--badge-transition-easing);
+	}
+
+	#lovable-badge.closing {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	#lovable-badge-cta {
+		display: flex;
+		align-items: baseline;
+		gap: var(--badge-gap);
+		box-sizing: border-box;
+		padding: 4px var(--badge-padding) 0;
+		height: 100%;
+		color: inherit;
+		text-decoration: none;
+		white-space: nowrap;
+		border-radius: var(--badge-radius) 0 0 var(--badge-radius);
+		transition: 
+			background-color var(--badge-transition-duration) ease,
+			color var(--badge-transition-duration) ease,
+			transform 0.1s ease;
+	}
+
+	#lovable-badge-cta:hover {
+		background: rgba(255, 255, 255, 0.04);
+		color: var(--badge-text-hover);
+	}
+
+	#lovable-badge-cta:active {
+		transform: scale(0.98);
+	}
+
+	#lovable-badge-cta:focus {
+		outline: none;
+	}
+
+	#lovable-badge-cta:focus-visible {
+		outline: var(--focus-width) solid var(--focus-color);
+		outline-offset: var(--focus-offset);
+		z-index: 1;
+	}
+
+	#lovable-badge-text {
+		line-height: 1;
+	}
+
+	/* The wordmark baseline sits at y=12 of the 16px logo; an empty 12px box
+	   makes that the flex baseline so the text aligns to it on any system font. */
+	#lovable-badge-logo {
+		position: relative;
+		display: block;
+		width: 52px;
+		height: 12px;
+	}
+
+	#lovable-badge-logo svg {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	#lovable-badge-divider {
+		width: 1px;
+		height: 24px;
+		background-color: rgba(255, 255, 255, 0.04);
+		flex-shrink: 0;
+	}
+
+	#lovable-badge-close {
+		width: 24px;
+		height: 24px;
+		min-width: 24px;
+		min-height: 24px;
+		cursor: pointer;
+		background: none;
+		border: none;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 0 var(--badge-radius) var(--badge-radius) 0;
+		flex-shrink: 0;
+		transition: 
+			background-color var(--badge-transition-duration) ease,
+			transform 0.1s ease;
+	}
+
+	#lovable-badge-close:hover {
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	#lovable-badge-close:active {
+		transform: scale(0.92);
+	}
+
+	#lovable-badge-close:focus {
+		outline: none;
+	}
+
+	#lovable-badge-close:focus-visible {
+		outline: var(--focus-width) solid var(--focus-color);
+		outline-offset: calc(var(--focus-offset) * -1);
+		z-index: 1;
+	}
+
+	#lovable-badge-close svg path {
+		fill: var(--badge-text);
+		transition: fill var(--badge-transition-duration) ease;
+	}
+
+	#lovable-badge-close:hover svg path {
+		fill: var(--badge-text-hover);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#lovable-badge,
+		#lovable-badge-cta,
+		#lovable-badge-close,
+		#lovable-badge-close svg path {
+			transition: none;
+		}
+		
+		#lovable-badge-cta:active,
+		#lovable-badge-close:active {
+			transform: none;
+		}
+	}
+
+	@media (prefers-contrast: high) {
+		#lovable-badge {
+			--badge-bg: #000;
+			--badge-text: #fff;
+			--badge-text-hover: #fff;
+			border: 2px solid currentColor;
+		}
+		
+		#lovable-badge-cta:focus-visible,
+		#lovable-badge-close:focus-visible {
+			outline-width: 3px;
+		}
+	}
+</style>
+<script defer src="/~flock.js" data-proxy-url="/~api/analytics"></script><script defer src="/__l5e/events.b21a279f52bb8621.js" data-artifact-kind="dwl_content_hash" data-artifact-id="6b3de446b34bfa3929f05e9ad5a8b13c0f64db86d55a1a66520d0b38a9559095" data-commit-sha="ea3725e703fb80c8681f6f8db4adb9a56bd3591b" data-context-token="v1.eyJwcm9qZWN0X2lkIjoibG92cF8yd3R5YmVlMHZ5OTE2dngxYnhqaGc0Mno1MiIsImFydGlmYWN0X2tpbmQiOiJkd2xfY29udGVudF9oYXNoIiwiYXJ0aWZhY3RfaWQiOiI2YjNkZTQ0NmIzNGJmYTM5MjlmMDVlOWFkNWE4YjEzYzBmNjRkYjg2ZDU1YTFhNjY1MjBkMGIzOGE5NTU5MDk1IiwiY29tbWl0X3NoYSI6ImVhMzcyNWU3MDNmYjgwYzg2ODFmNmY4ZGI0YWRiOWE1NmJkMzU5MWIiLCJleHAiOjE3OTU3NzQ1OTR9.koVceFGXurXJW2pcD4wJYKH1AckFWnZk4lh6MhV_Y00"></script><meta name="twitter:title" content="IPL Performance Intelligence"><meta name="twitter:description" content="Interactive IPL insight dashboard with team, player and season analytics."><meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_2wtybee0vy916vx1bxjhg42z52/838cbf83f5ab54984d208555554b151b_1793181894757.png"><meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_2wtybee0vy916vx1bxjhg42z52/838cbf83f5ab54984d208555554b151b_1793181894757.png"></head><body><!--$--><iframe srcDoc="&lt;!doctype html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;IPL Performance Intelligence&lt;/title&gt;&lt;script src=&quot;https://cdn.plot.ly/plotly-2.35.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;style&gt;
 :root{--green:#244d35;--green2:#36784c;--paper:#f4f7f3;--ink:#1d2a22;--muted:#657469;--line:#e0e8df;--gold:#f4c84a;--red:#d96b65}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif}
 .layout{display:grid;grid-template-columns:205px 1fr;min-height:100vh}.side{background:var(--green);color:white;padding:24px 17px;position:sticky;top:0;height:100vh}
@@ -15,82 +199,221 @@ h1{font-size:28px;letter-spacing:-.8px;margin:5px 0}.subtitle{color:var(--muted)
 .note{margin-top:16px;padding:12px 14px;background:#fff8df;border:1px solid #f1df9e;border-radius:9px;color:#6b5722;font-size:10px;line-height:1.6}
 @media(max-width:1100px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.layout{grid-template-columns:175px 1fr}.insightgrid{grid-template-columns:1fr}}
 @media(max-width:760px){.layout{grid-template-columns:1fr}.side{position:relative;height:auto;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:15px}.brand,.side p,.hint{grid-column:1/-1;position:static}.side label{margin:4px 0}.grid{grid-template-columns:1fr}main{padding:18px 12px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
-</style></head><body><div class="layout">
-<aside class="side"><div class="brand">IPL<span style="color:#f4c84a">.</span><small>PERFORMANCE INTELLIGENCE</small></div>
-<p>Explore how scoring pace, boundary dependence and wickets change across seasons, teams and match phases.</p>
-<label for="season">SEASON FILTER</label><select id="season"><option value="ALL">All available seasons</option></select>
-<label for="team">TEAM FILTER</label><select id="team"><option value="ALL">All batting teams</option></select>
-<div class="hint">Tip: compare rates alongside match counts. Raw totals often reward teams or seasons with more matches.</div></aside>
-<main><div class="eyebrow">Cricket analytics • descriptive, not just totals</div><h1>IPL Performance Dashboard</h1>
-<p class="subtitle">A decision-focused view of scoring efficiency, match intensity and player impact. Use the filters to compare like-for-like seasons and teams.</p>
-<div class="kpis" id="kpis"></div>
-<div class="section">01 / What is changing across seasons?</div><div class="grid">
-<div class="panel"><h3>Scoring pace by season</h3><p class="explainer">Run rate normalizes scoring by legal deliveries, helping compare seasons with different match volumes.</p><div id="seasonRate" class="chart"></div></div>
-<div class="panel"><h3>Run production vs scoring pace</h3><p class="explainer">Each point is a season. A high total with modest pace can mean more matches, not necessarily more aggressive cricket.</p><div id="seasonScatter" class="chart"></div></div>
-</div>
-<div class="section">02 / Team style and efficiency</div><div class="grid">
-<div class="panel"><h3>Team scoring profile</h3><p class="explainer">Compare average runs per match rather than rewarding teams only for playing more matches.</p><div id="teamRPM" class="chart"></div></div>
-<div class="panel"><h3>Boundary dependence vs run rate</h3><p class="explainer">Higher boundary share indicates more runs coming from fours and sixes; pace shows how quickly runs are scored.</p><div id="teamScatter" class="chart"></div></div>
-</div>
-<div class="section">03 / Match phases and player impact</div><div class="grid">
-<div class="panel"><h3>How scoring changes by innings phase</h3><p class="explainer">Powerplay, middle and death phase run rates reveal when teams accelerate and where wicket risk rises.</p><div id="phaseChart" class="chart short"></div></div>
-<div class="panel"><h3>High strike-rate batters</h3><p class="explainer">Players are screened for at least 500 recorded balls and 20 matches to reduce tiny-sample distortions.</p><div id="batChart" class="chart short"></div></div>
-<div class="panel"><h3>Economical wicket-taking bowlers</h3><p class="explainer">Economy is shown with a 100-over and 20-match minimum; validate run attribution before treating it as official.</p><div id="bowlChart" class="chart short"></div></div>
-<div class="panel"><h3>Higher-scoring venues</h3><p class="explainer">Average runs per match for venues with at least 10 matches in the dataset.</p><div id="venueChart" class="chart short"></div></div>
-</div>
-<div class="section">04 / Insights to investigate</div><div class="insightgrid" id="insights"></div>
-<div class="note"><b>Data interpretation:</b> The source combines ball-by-ball rows with match-info metadata. This dashboard analyzes only ball-by-ball records. Season totals are not directly comparable if seasons are incomplete. Legal-delivery logic excludes wides and no-balls, but player-specific balls faced and official bowler-conceded runs require more detailed cricket rules (for example, byes and leg-byes are not charged to the bowler). This is a descriptive analytics view, not a measure of causation.</div>
-</main></div>
-<script>
-const D={"season": [{"season": "2007/08", "runs": 17937.0, "matches": 58, "wickets": 690, "runs_per_match": 309.2586206896552, "run_rate": 8.31057915057915, "boundary_share": 58.81697050788872, "wickets_per_match": 11.89655172413793}, {"season": "2009", "runs": 16353.0, "matches": 57, "wickets": 698, "runs_per_match": 286.89473684210526, "run_rate": 7.492783505154639, "boundary_share": 50.95089586008683, "wickets_per_match": 12.24561403508772}, {"season": "2009/10", "runs": 18883.0, "matches": 60, "wickets": 725, "runs_per_match": 314.71666666666664, "run_rate": 8.128712871287128, "boundary_share": 54.853571995975216, "wickets_per_match": 12.083333333333334}, {"season": "2011", "runs": 21154.0, "matches": 73, "wickets": 813, "runs_per_match": 289.7808219178082, "run_rate": 7.7274885844748855, "boundary_share": 54.353786517916234, "wickets_per_match": 11.136986301369863}, {"season": "2012", "runs": 22453.0, "matches": 74, "wickets": 858, "runs_per_match": 303.4189189189189, "run_rate": 7.828800557880056, "boundary_share": 53.632031354384715, "wickets_per_match": 11.594594594594595}, {"season": "2013", "runs": 22602.0, "matches": 76, "wickets": 912, "runs_per_match": 297.39473684210526, "run_rate": 7.689062765776493, "boundary_share": 54.428811609592074, "wickets_per_match": 12.0}, {"season": "2014", "runs": 18931.0, "matches": 60, "wickets": 674, "runs_per_match": 315.51666666666665, "run_rate": 8.204117009750812, "boundary_share": 55.686440230310076, "wickets_per_match": 11.233333333333333}, {"season": "2015", "runs": 18353.0, "matches": 59, "wickets": 691, "runs_per_match": 311.06779661016947, "run_rate": 8.373992395437263, "boundary_share": 57.7344303383643, "wickets_per_match": 11.711864406779661}, {"season": "2016", "runs": 18862.0, "matches": 60, "wickets": 666, "runs_per_match": 314.3666666666667, "run_rate": 8.310471434865619, "boundary_share": 54.95705651574594, "wickets_per_match": 11.1}, {"season": "2017", "runs": 18786.0, "matches": 59, "wickets": 711, "runs_per_match": 318.40677966101697, "run_rate": 8.411014103425117, "boundary_share": 56.8721388267859, "wickets_per_match": 12.05084745762712}, {"season": "2018", "runs": 19901.0, "matches": 60, "wickets": 722, "runs_per_match": 331.68333333333334, "run_rate": 8.647595596755503, "boundary_share": 59.49449776393146, "wickets_per_match": 12.033333333333333}, {"season": "2019", "runs": 19434.0, "matches": 60, "wickets": 685, "runs_per_match": 323.9, "run_rate": 8.415415704387991, "boundary_share": 58.3307605227951, "wickets_per_match": 11.416666666666666}, {"season": "2020/21", "runs": 19416.0, "matches": 60, "wickets": 677, "runs_per_match": 323.6, "run_rate": 8.28976019355298, "boundary_share": 55.48001648125257, "wickets_per_match": 11.283333333333333}, {"season": "2021", "runs": 18637.0, "matches": 60, "wickets": 717, "runs_per_match": 310.6166666666667, "run_rate": 8.051699308755762, "boundary_share": 55.405912968825454, "wickets_per_match": 11.95}, {"season": "2022", "runs": 24395.0, "matches": 74, "wickets": 912, "runs_per_match": 329.6621621621622, "run_rate": 8.54066985645933, "boundary_share": 59.24164787866366, "wickets_per_match": 12.324324324324325}, {"season": "2023", "runs": 25688.0, "matches": 74, "wickets": 916, "runs_per_match": 347.13513513513516, "run_rate": 8.993872906576414, "boundary_share": 60.12145748987854, "wickets_per_match": 12.378378378378379}, {"season": "2024", "runs": 25971.0, "matches": 71, "wickets": 883, "runs_per_match": 365.7887323943662, "run_rate": 9.560463832136941, "boundary_share": 62.63139655769897, "wickets_per_match": 12.43661971830986}, {"season": "2025", "runs": 23035.0, "matches": 65, "wickets": 766, "runs_per_match": 354.38461538461536, "run_rate": 9.535669932385815, "boundary_share": 63.30366833080095, "wickets_per_match": 11.784615384615385}], "team": [{"batting_team": "Chennai Super Kings", "runs": 40840.0, "matches": 250, "wickets": 1335, "fours": 3377, "sixes": 1596, "runs_per_match": 163.36, "run_rate": 8.400411381556394, "boundary_share": 56.523016650342804, "wickets_per_match": 5.34}, {"batting_team": "Deccan Chargers", "runs": 11463.0, "matches": 75, "wickets": 484, "fours": 957, "sixes": 400, "runs_per_match": 152.84, "run_rate": 7.858546617915905, "boundary_share": 54.33132687778068, "wickets_per_match": 6.453333333333333}, {"batting_team": "Delhi Capitals", "runs": 17192.0, "matches": 104, "wickets": 654, "fours": 1555, "sixes": 649, "runs_per_match": 165.30769230769232, "run_rate": 8.567441860465117, "boundary_share": 58.829688227082364, "wickets_per_match": 6.288461538461538}, {"batting_team": "Delhi Daredevils", "runs": 24296.0, "matches": 161, "wickets": 952, "fours": 2156, "sixes": 801, "runs_per_match": 150.90683229813664, "run_rate": 8.029081295439525, "boundary_share": 55.27658873888706, "wickets_per_match": 5.913043478260869}, {"batting_team": "Gujarat Lions", "runs": 4862.0, "matches": 30, "wickets": 188, "fours": 460, "sixes": 155, "runs_per_match": 162.06666666666666, "run_rate": 8.482698458854319, "boundary_share": 56.9724393253805, "wickets_per_match": 6.266666666666667}, {"batting_team": "Gujarat Titans", "runs": 10294.0, "matches": 58, "wickets": 309, "fours": 916, "sixes": 380, "runs_per_match": 177.48275862068965, "run_rate": 9.109734513274336, "boundary_share": 57.742374198562274, "wickets_per_match": 5.327586206896552}, {"batting_team": "Kings XI Punjab", "runs": 30064.0, "matches": 190, "wickets": 1158, "fours": 2631, "sixes": 1075, "runs_per_match": 158.23157894736843, "run_rate": 8.234832230084455, "boundary_share": 56.459552953698775, "wickets_per_match": 6.094736842105263}, {"batting_team": "Kochi Tuskers Kerala", "runs": 1901.0, "matches": 14, "wickets": 86, "fours": 170, "sixes": 53, "runs_per_match": 135.78571428571428, "run_rate": 7.55364238410596, "boundary_share": 52.498684902682804, "wickets_per_match": 6.142857142857143}, {"batting_team": "Kolkata Knight Riders", "runs": 41165.0, "matches": 263, "wickets": 1563, "fours": 3623, "sixes": 1584, "runs_per_match": 156.52091254752852, "run_rate": 8.3490518203022, "boundary_share": 58.29223855216811, "wickets_per_match": 5.942965779467681}, {"batting_team": "Lucknow Super Giants", "runs": 10015.0, "matches": 57, "wickets": 355, "fours": 778, "sixes": 470, "runs_per_match": 175.7017543859649, "run_rate": 8.992816521999401, "boundary_share": 59.23115327009486, "wickets_per_match": 6.228070175438597}, {"batting_team": "Mumbai Indians", "runs": 44473.0, "matches": 274, "wickets": 1641, "fours": 3848, "sixes": 1795, "runs_per_match": 162.3102189781022, "run_rate": 8.417868071547998, "boundary_share": 58.826703842781015, "wickets_per_match": 5.989051094890511}, {"batting_team": "Pune Warriors", "runs": 6358.0, "matches": 45, "wickets": 298, "fours": 525, "sixes": 196, "runs_per_match": 141.2888888888889, "run_rate": 7.231848341232228, "boundary_share": 51.52563699276502, "wickets_per_match": 6.622222222222222}, {"batting_team": "Punjab Kings", "runs": 11913.0, "matches": 69, "wickets": 441, "fours": 993, "sixes": 570, "runs_per_match": 172.65217391304347, "run_rate": 9.02158273381295, "boundary_share": 62.04986149584487, "wickets_per_match": 6.391304347826087}, {"batting_team": "Rajasthan Royals", "runs": 37361.0, "matches": 234, "wickets": 1406, "fours": 3302, "sixes": 1383, "runs_per_match": 159.66239316239316, "run_rate": 8.323716163529019, "boundary_share": 57.562699071224, "wickets_per_match": 6.0085470085470085}, {"batting_team": "Rising Pune Supergiant", "runs": 2470.0, "matches": 16, "wickets": 90, "fours": 197, "sixes": 89, "runs_per_match": 154.375, "run_rate": 8.041237113402062, "boundary_share": 53.522267206477736, "wickets_per_match": 5.625}, {"batting_team": "Rising Pune Supergiants", "runs": 2063.0, "matches": 14, "wickets": 68, "fours": 171, "sixes": 68, "runs_per_match": 147.35714285714286, "run_rate": 8.138067061143984, "boundary_share": 52.93262239457101, "wickets_per_match": 4.857142857142857}, {"batting_team": "Royal Challengers Bangalore", "runs": 37692.0, "matches": 240, "wickets": 1384, "fours": 3149, "sixes": 1488, "runs_per_match": 157.05, "run_rate": 8.311050678034618, "boundary_share": 57.104955958824156, "wickets_per_match": 5.766666666666667}, {"batting_team": "Royal Challengers Bengaluru", "runs": 5057.0, "matches": 27, "wickets": 166, "fours": 416, "sixes": 269, "runs_per_match": 187.2962962962963, "run_rate": 9.844905905256327, "boundary_share": 64.8210401423769, "wickets_per_match": 6.148148148148148}, {"batting_team": "Sunrisers Hyderabad", "runs": 31312.0, "matches": 194, "wickets": 1138, "fours": 2602, "sixes": 1143, "runs_per_match": 161.4020618556701, "run_rate": 8.372938764595775, "boundary_share": 55.14179867143587, "wickets_per_match": 5.865979381443299}], "phase": [{"phase": "Powerplay (0–5)", "runs": 110539.0, "legal": 83388, "wickets": 3352, "run_rate": 7.953590444668298}, {"phase": "Middle (6–14)", "runs": 160712.0, "legal": 122834, "wickets": 5300, "run_rate": 7.850204340817689}, {"phase": "Death (15–19)", "runs": 99540.0, "legal": 59718, "wickets": 5064, "run_rate": 10.001004722194313}], "bat": [{"player": "PD Salt", "runs": 954.0, "balls": 540, "strike_rate": 176.66666666666666, "matches": 31}, {"player": "AD Russell", "runs": 2655.0, "balls": 1507, "strike_rate": 176.17783676177837, "matches": 113}, {"player": "TM Head", "runs": 1070.0, "balls": 627, "strike_rate": 170.65390749601278, "matches": 36}, {"player": "N Pooran", "runs": 2280.0, "balls": 1345, "strike_rate": 169.51672862453532, "matches": 85}, {"player": "H Klaasen", "runs": 1375.0, "balls": 825, "strike_rate": 166.66666666666669, "matches": 44}, {"player": "SP Narine", "runs": 1749.0, "balls": 1051, "strike_rate": 166.4129400570885, "matches": 117}, {"player": "Abhishek Sharma", "runs": 1784.0, "balls": 1092, "strike_rate": 163.36996336996336, "matches": 73}, {"player": "LS Livingstone", "runs": 1026.0, "balls": 639, "strike_rate": 160.56338028169014, "matches": 45}, {"player": "V Sehwag", "runs": 2728.0, "balls": 1740, "strike_rate": 156.7816091954023, "matches": 104}, {"player": "P Simran Singh", "runs": 1264.0, "balls": 809, "strike_rate": 156.24227441285538, "matches": 47}, {"player": "GJ Maxwell", "runs": 2820.0, "balls": 1810, "strike_rate": 155.8011049723757, "matches": 134}, {"player": "RM Patidar", "runs": 1056.0, "balls": 688, "strike_rate": 153.48837209302326, "matches": 35}], "bowl": [{"player": "A Kumble", "wickets": 49, "economy": 6.770984455958549, "overs": 160.83333333333334, "matches": 42}, {"player": "DL Vettori", "wickets": 34, "economy": 6.903474903474904, "overs": 129.5, "matches": 34}, {"player": "SP Narine", "wickets": 210, "economy": 6.915183730067022, "overs": 721.1666666666666, "matches": 186}, {"player": "M Muralitharan", "wickets": 67, "economy": 6.930628272251309, "overs": 254.66666666666666, "matches": 66}, {"player": "J Botha", "wickets": 27, "economy": 7.072046109510087, "overs": 115.66666666666667, "matches": 34}, {"player": "DW Steyn", "wickets": 105, "economy": 7.102658111824014, "overs": 363.6666666666667, "matches": 95}, {"player": "R Sharma", "wickets": 42, "economy": 7.112068965517242, "overs": 154.66666666666666, "matches": 44}, {"player": "Harbhajan Singh", "wickets": 161, "economy": 7.203161592505855, "overs": 569.3333333333334, "matches": 160}, {"player": "Rashid Khan", "wickets": 165, "economy": 7.207989854153457, "overs": 525.6666666666666, "matches": 134}, {"player": "MM Ali", "wickets": 46, "economy": 7.278688524590163, "overs": 142.33333333333334, "matches": 57}, {"player": "R Ashwin", "wickets": 205, "economy": 7.287898089171975, "overs": 785.0, "matches": 217}, {"player": "Iqbal Abdulla", "wickets": 45, "economy": 7.33695652173913, "overs": 153.33333333333334, "matches": 48}], "venue": [{"venue": "Arun Jaitley Stadium, Delhi", "matches": 22, "runs_per_match": 381.3181818181818, "run_rate": 9.69639761125024, "wickets": 265}, {"venue": "Eden Gardens, Kolkata", "matches": 23, "runs_per_match": 372.4347826086956, "run_rate": 9.906707787201235, "wickets": 271}, {"venue": "M Chinnaswamy Stadium, Bengaluru", "matches": 19, "runs_per_match": 368.89473684210526, "run_rate": 9.66092350103377, "wickets": 238}, {"venue": "Rajiv Gandhi International Stadium, Uppal, Hyderabad", "matches": 19, "runs_per_match": 361.7368421052632, "run_rate": 9.684828558008455, "wickets": 207}, {"venue": "Sawai Mansingh Stadium, Jaipur", "matches": 15, "runs_per_match": 354.0, "run_rate": 9.32396839332748, "wickets": 150}, {"venue": "Narendra Modi Stadium, Ahmedabad", "matches": 30, "runs_per_match": 353.7, "run_rate": 9.21627099015634, "wickets": 358}, {"venue": "Brabourne Stadium", "matches": 10, "runs_per_match": 348.1, "run_rate": 8.831289640591965, "wickets": 120}, {"venue": "Punjab Cricket Association IS Bindra Stadium", "matches": 10, "runs_per_match": 347.6, "run_rate": 8.86734693877551, "wickets": 104}, {"venue": "Wankhede Stadium, Mumbai", "matches": 52, "runs_per_match": 344.5, "run_rate": 8.982450275781382, "wickets": 618}, {"venue": "Brabourne Stadium, Mumbai", "matches": 17, "runs_per_match": 342.5882352941176, "run_rate": 9.017806451612902, "wickets": 211}, {"venue": "M.Chinnaswamy Stadium", "matches": 15, "runs_per_match": 341.8, "run_rate": 9.133610451306412, "wickets": 179}, {"venue": "Saurashtra Cricket Association Stadium", "matches": 10, "runs_per_match": 333.3, "run_rate": 8.67592190889371, "wickets": 109}], "seasons": ["2007/08", "2009", "2009/10", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020/21", "2021", "2022", "2023", "2024", "2025"], "teams": ["Chennai Super Kings", "Deccan Chargers", "Delhi Capitals", "Delhi Daredevils", "Gujarat Lions", "Gujarat Titans", "Kings XI Punjab", "Kochi Tuskers Kerala", "Kolkata Knight Riders", "Lucknow Super Giants", "Mumbai Indians", "Pune Warriors", "Punjab Kings", "Rajasthan Royals", "Rising Pune Supergiant", "Rising Pune Supergiants", "Royal Challengers Bangalore", "Royal Challengers Bengaluru", "Sunrisers Hyderabad"]};
-const fmt=n=>Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:1});
-const pct=n=>(Number(n)||0).toFixed(1)+'%';
-const rate=n=>(Number(n)||0).toFixed(2);
-const C={green:'#36784c',gold:'#eabf32',blue:'#4779a8',red:'#d96b65',teal:'#4a9b91',purple:'#8972b3',gray:'#8c9b8e'};
-const base={paper_bgcolor:'white',plot_bgcolor:'white',font:{family:'Segoe UI,Arial',size:10,color:'#33443a'},margin:{l:48,r:18,t:25,b:42},showlegend:false};
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class=&quot;layout&quot;&gt;
+&lt;aside class=&quot;side&quot;&gt;&lt;div class=&quot;brand&quot;&gt;IPL&lt;span style=&quot;color:#f4c84a&quot;&gt;.&lt;/span&gt;&lt;small&gt;PERFORMANCE INTELLIGENCE&lt;/small&gt;&lt;/div&gt;
+&lt;p&gt;Explore how scoring pace, boundary dependence and wickets change across seasons, teams and match phases.&lt;/p&gt;
+&lt;label for=&quot;season&quot;&gt;SEASON FILTER&lt;/label&gt;&lt;select id=&quot;season&quot;&gt;&lt;option value=&quot;ALL&quot;&gt;All available seasons&lt;/option&gt;&lt;/select&gt;
+&lt;label for=&quot;team&quot;&gt;TEAM FILTER&lt;/label&gt;&lt;select id=&quot;team&quot;&gt;&lt;option value=&quot;ALL&quot;&gt;All batting teams&lt;/option&gt;&lt;/select&gt;
+&lt;div class=&quot;hint&quot;&gt;Tip: compare rates alongside match counts. Raw totals often reward teams or seasons with more matches.&lt;/div&gt;&lt;/aside&gt;
+&lt;main&gt;&lt;div class=&quot;eyebrow&quot;&gt;Cricket analytics • descriptive, not just totals&lt;/div&gt;&lt;h1&gt;IPL Performance Dashboard&lt;/h1&gt;
+&lt;p class=&quot;subtitle&quot;&gt;A decision-focused view of scoring efficiency, match intensity and player impact. Use the filters to compare like-for-like seasons and teams.&lt;/p&gt;
+&lt;div class=&quot;kpis&quot; id=&quot;kpis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;section&quot;&gt;01 / What is changing across seasons?&lt;/div&gt;&lt;div class=&quot;grid&quot;&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;Scoring pace by season&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Run rate normalizes scoring by legal deliveries, helping compare seasons with different match volumes.&lt;/p&gt;&lt;div id=&quot;seasonRate&quot; class=&quot;chart&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;Run production vs scoring pace&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Each point is a season. A high total with modest pace can mean more matches, not necessarily more aggressive cricket.&lt;/p&gt;&lt;div id=&quot;seasonScatter&quot; class=&quot;chart&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;section&quot;&gt;02 / Team style and efficiency&lt;/div&gt;&lt;div class=&quot;grid&quot;&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;Team scoring profile&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Compare average runs per match rather than rewarding teams only for playing more matches.&lt;/p&gt;&lt;div id=&quot;teamRPM&quot; class=&quot;chart&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;Boundary dependence vs run rate&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Higher boundary share indicates more runs coming from fours and sixes; pace shows how quickly runs are scored.&lt;/p&gt;&lt;div id=&quot;teamScatter&quot; class=&quot;chart&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;section&quot;&gt;03 / Match phases and player impact&lt;/div&gt;&lt;div class=&quot;grid&quot;&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;How scoring changes by innings phase&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Powerplay, middle and death phase run rates reveal when teams accelerate and where wicket risk rises.&lt;/p&gt;&lt;div id=&quot;phaseChart&quot; class=&quot;chart short&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;High strike-rate batters&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Players are screened for at least 500 recorded balls and 20 matches to reduce tiny-sample distortions.&lt;/p&gt;&lt;div id=&quot;batChart&quot; class=&quot;chart short&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;Economical wicket-taking bowlers&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Economy is shown with a 100-over and 20-match minimum; validate run attribution before treating it as official.&lt;/p&gt;&lt;div id=&quot;bowlChart&quot; class=&quot;chart short&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;Higher-scoring venues&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Average runs per match for venues with at least 10 matches in the dataset.&lt;/p&gt;&lt;div id=&quot;venueChart&quot; class=&quot;chart short&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;section&quot;&gt;04 / Share breakdowns&lt;/div&gt;&lt;div class=&quot;grid&quot;&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;Where the runs come from&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Share of all runs scored in each innings phase.&lt;/p&gt;&lt;div id=&quot;phasePie&quot; class=&quot;chart short&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;When wickets fall&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Donut of wickets by innings phase.&lt;/p&gt;&lt;div id=&quot;phaseDonut&quot; class=&quot;chart short&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;Team share of total runs&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Each team&#x27;s portion of all runs in the dataset (top 8, rest grouped).&lt;/p&gt;&lt;div id=&quot;teamPie&quot; class=&quot;chart short&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;Boundary composition&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Runs from fours, sixes and everything else for the teams in view.&lt;/p&gt;&lt;div id=&quot;boundaryDonut&quot; class=&quot;chart short&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;section&quot;&gt;05 / Team by team analysis&lt;/div&gt;
+&lt;div class=&quot;panel&quot; style=&quot;margin-bottom:11px&quot;&gt;&lt;h3&gt;Pick a team &lt;select id=&quot;ttTeam&quot; style=&quot;margin-left:8px;padding:4px 6px;border-radius:6px;border:1px solid var(--line)&quot;&gt;&lt;/select&gt;&lt;/h3&gt;&lt;div id=&quot;ttKpis&quot; class=&quot;kpis&quot; style=&quot;margin:10px 8px&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;grid&quot;&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;Run makeup&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;How the selected team&#x27;s runs split between fours, sixes and running.&lt;/p&gt;&lt;div id=&quot;ttDonut&quot; class=&quot;chart short&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;panel&quot;&gt;&lt;h3&gt;Team vs league average&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Each measure shown as a percent of the league average (100 = average).&lt;/p&gt;&lt;div id=&quot;ttCompare&quot; class=&quot;chart short&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;panel&quot; style=&quot;grid-column:1/-1&quot;&gt;&lt;h3&gt;All teams side by side&lt;/h3&gt;&lt;p class=&quot;explainer&quot;&gt;Ranked by runs per match.&lt;/p&gt;&lt;div id=&quot;ttTable&quot; style=&quot;overflow:auto;margin:8px&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;section&quot;&gt;06 / Insights to investigate&lt;/div&gt;&lt;div class=&quot;insightgrid&quot; id=&quot;insights&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;note&quot;&gt;&lt;b&gt;Data interpretation:&lt;/b&gt; The source combines ball-by-ball rows with match-info metadata. This dashboard analyzes only ball-by-ball records. Season totals are not directly comparable if seasons are incomplete. Legal-delivery logic excludes wides and no-balls, but player-specific balls faced and official bowler-conceded runs require more detailed cricket rules (for example, byes and leg-byes are not charged to the bowler). This is a descriptive analytics view, not a measure of causation.&lt;/div&gt;
+&lt;/main&gt;&lt;/div&gt;
+&lt;script&gt;
+const D={&quot;season&quot;: [{&quot;season&quot;: &quot;2007/08&quot;, &quot;runs&quot;: 17937.0, &quot;matches&quot;: 58, &quot;wickets&quot;: 690, &quot;runs_per_match&quot;: 309.2586206896552, &quot;run_rate&quot;: 8.31057915057915, &quot;boundary_share&quot;: 58.81697050788872, &quot;wickets_per_match&quot;: 11.89655172413793}, {&quot;season&quot;: &quot;2009&quot;, &quot;runs&quot;: 16353.0, &quot;matches&quot;: 57, &quot;wickets&quot;: 698, &quot;runs_per_match&quot;: 286.89473684210526, &quot;run_rate&quot;: 7.492783505154639, &quot;boundary_share&quot;: 50.95089586008683, &quot;wickets_per_match&quot;: 12.24561403508772}, {&quot;season&quot;: &quot;2009/10&quot;, &quot;runs&quot;: 18883.0, &quot;matches&quot;: 60, &quot;wickets&quot;: 725, &quot;runs_per_match&quot;: 314.71666666666664, &quot;run_rate&quot;: 8.128712871287128, &quot;boundary_share&quot;: 54.853571995975216, &quot;wickets_per_match&quot;: 12.083333333333334}, {&quot;season&quot;: &quot;2011&quot;, &quot;runs&quot;: 21154.0, &quot;matches&quot;: 73, &quot;wickets&quot;: 813, &quot;runs_per_match&quot;: 289.7808219178082, &quot;run_rate&quot;: 7.7274885844748855, &quot;boundary_share&quot;: 54.353786517916234, &quot;wickets_per_match&quot;: 11.136986301369863}, {&quot;season&quot;: &quot;2012&quot;, &quot;runs&quot;: 22453.0, &quot;matches&quot;: 74, &quot;wickets&quot;: 858, &quot;runs_per_match&quot;: 303.4189189189189, &quot;run_rate&quot;: 7.828800557880056, &quot;boundary_share&quot;: 53.632031354384715, &quot;wickets_per_match&quot;: 11.594594594594595}, {&quot;season&quot;: &quot;2013&quot;, &quot;runs&quot;: 22602.0, &quot;matches&quot;: 76, &quot;wickets&quot;: 912, &quot;runs_per_match&quot;: 297.39473684210526, &quot;run_rate&quot;: 7.689062765776493, &quot;boundary_share&quot;: 54.428811609592074, &quot;wickets_per_match&quot;: 12.0}, {&quot;season&quot;: &quot;2014&quot;, &quot;runs&quot;: 18931.0, &quot;matches&quot;: 60, &quot;wickets&quot;: 674, &quot;runs_per_match&quot;: 315.51666666666665, &quot;run_rate&quot;: 8.204117009750812, &quot;boundary_share&quot;: 55.686440230310076, &quot;wickets_per_match&quot;: 11.233333333333333}, {&quot;season&quot;: &quot;2015&quot;, &quot;runs&quot;: 18353.0, &quot;matches&quot;: 59, &quot;wickets&quot;: 691, &quot;runs_per_match&quot;: 311.06779661016947, &quot;run_rate&quot;: 8.373992395437263, &quot;boundary_share&quot;: 57.7344303383643, &quot;wickets_per_match&quot;: 11.711864406779661}, {&quot;season&quot;: &quot;2016&quot;, &quot;runs&quot;: 18862.0, &quot;matches&quot;: 60, &quot;wickets&quot;: 666, &quot;runs_per_match&quot;: 314.3666666666667, &quot;run_rate&quot;: 8.310471434865619, &quot;boundary_share&quot;: 54.95705651574594, &quot;wickets_per_match&quot;: 11.1}, {&quot;season&quot;: &quot;2017&quot;, &quot;runs&quot;: 18786.0, &quot;matches&quot;: 59, &quot;wickets&quot;: 711, &quot;runs_per_match&quot;: 318.40677966101697, &quot;run_rate&quot;: 8.411014103425117, &quot;boundary_share&quot;: 56.8721388267859, &quot;wickets_per_match&quot;: 12.05084745762712}, {&quot;season&quot;: &quot;2018&quot;, &quot;runs&quot;: 19901.0, &quot;matches&quot;: 60, &quot;wickets&quot;: 722, &quot;runs_per_match&quot;: 331.68333333333334, &quot;run_rate&quot;: 8.647595596755503, &quot;boundary_share&quot;: 59.49449776393146, &quot;wickets_per_match&quot;: 12.033333333333333}, {&quot;season&quot;: &quot;2019&quot;, &quot;runs&quot;: 19434.0, &quot;matches&quot;: 60, &quot;wickets&quot;: 685, &quot;runs_per_match&quot;: 323.9, &quot;run_rate&quot;: 8.415415704387991, &quot;boundary_share&quot;: 58.3307605227951, &quot;wickets_per_match&quot;: 11.416666666666666}, {&quot;season&quot;: &quot;2020/21&quot;, &quot;runs&quot;: 19416.0, &quot;matches&quot;: 60, &quot;wickets&quot;: 677, &quot;runs_per_match&quot;: 323.6, &quot;run_rate&quot;: 8.28976019355298, &quot;boundary_share&quot;: 55.48001648125257, &quot;wickets_per_match&quot;: 11.283333333333333}, {&quot;season&quot;: &quot;2021&quot;, &quot;runs&quot;: 18637.0, &quot;matches&quot;: 60, &quot;wickets&quot;: 717, &quot;runs_per_match&quot;: 310.6166666666667, &quot;run_rate&quot;: 8.051699308755762, &quot;boundary_share&quot;: 55.405912968825454, &quot;wickets_per_match&quot;: 11.95}, {&quot;season&quot;: &quot;2022&quot;, &quot;runs&quot;: 24395.0, &quot;matches&quot;: 74, &quot;wickets&quot;: 912, &quot;runs_per_match&quot;: 329.6621621621622, &quot;run_rate&quot;: 8.54066985645933, &quot;boundary_share&quot;: 59.24164787866366, &quot;wickets_per_match&quot;: 12.324324324324325}, {&quot;season&quot;: &quot;2023&quot;, &quot;runs&quot;: 25688.0, &quot;matches&quot;: 74, &quot;wickets&quot;: 916, &quot;runs_per_match&quot;: 347.13513513513516, &quot;run_rate&quot;: 8.993872906576414, &quot;boundary_share&quot;: 60.12145748987854, &quot;wickets_per_match&quot;: 12.378378378378379}, {&quot;season&quot;: &quot;2024&quot;, &quot;runs&quot;: 25971.0, &quot;matches&quot;: 71, &quot;wickets&quot;: 883, &quot;runs_per_match&quot;: 365.7887323943662, &quot;run_rate&quot;: 9.560463832136941, &quot;boundary_share&quot;: 62.63139655769897, &quot;wickets_per_match&quot;: 12.43661971830986}, {&quot;season&quot;: &quot;2025&quot;, &quot;runs&quot;: 23035.0, &quot;matches&quot;: 65, &quot;wickets&quot;: 766, &quot;runs_per_match&quot;: 354.38461538461536, &quot;run_rate&quot;: 9.535669932385815, &quot;boundary_share&quot;: 63.30366833080095, &quot;wickets_per_match&quot;: 11.784615384615385}], &quot;team&quot;: [{&quot;batting_team&quot;: &quot;Chennai Super Kings&quot;, &quot;runs&quot;: 40840.0, &quot;matches&quot;: 250, &quot;wickets&quot;: 1335, &quot;fours&quot;: 3377, &quot;sixes&quot;: 1596, &quot;runs_per_match&quot;: 163.36, &quot;run_rate&quot;: 8.400411381556394, &quot;boundary_share&quot;: 56.523016650342804, &quot;wickets_per_match&quot;: 5.34}, {&quot;batting_team&quot;: &quot;Deccan Chargers&quot;, &quot;runs&quot;: 11463.0, &quot;matches&quot;: 75, &quot;wickets&quot;: 484, &quot;fours&quot;: 957, &quot;sixes&quot;: 400, &quot;runs_per_match&quot;: 152.84, &quot;run_rate&quot;: 7.858546617915905, &quot;boundary_share&quot;: 54.33132687778068, &quot;wickets_per_match&quot;: 6.453333333333333}, {&quot;batting_team&quot;: &quot;Delhi Capitals&quot;, &quot;runs&quot;: 17192.0, &quot;matches&quot;: 104, &quot;wickets&quot;: 654, &quot;fours&quot;: 1555, &quot;sixes&quot;: 649, &quot;runs_per_match&quot;: 165.30769230769232, &quot;run_rate&quot;: 8.567441860465117, &quot;boundary_share&quot;: 58.829688227082364, &quot;wickets_per_match&quot;: 6.288461538461538}, {&quot;batting_team&quot;: &quot;Delhi Daredevils&quot;, &quot;runs&quot;: 24296.0, &quot;matches&quot;: 161, &quot;wickets&quot;: 952, &quot;fours&quot;: 2156, &quot;sixes&quot;: 801, &quot;runs_per_match&quot;: 150.90683229813664, &quot;run_rate&quot;: 8.029081295439525, &quot;boundary_share&quot;: 55.27658873888706, &quot;wickets_per_match&quot;: 5.913043478260869}, {&quot;batting_team&quot;: &quot;Gujarat Lions&quot;, &quot;runs&quot;: 4862.0, &quot;matches&quot;: 30, &quot;wickets&quot;: 188, &quot;fours&quot;: 460, &quot;sixes&quot;: 155, &quot;runs_per_match&quot;: 162.06666666666666, &quot;run_rate&quot;: 8.482698458854319, &quot;boundary_share&quot;: 56.9724393253805, &quot;wickets_per_match&quot;: 6.266666666666667}, {&quot;batting_team&quot;: &quot;Gujarat Titans&quot;, &quot;runs&quot;: 10294.0, &quot;matches&quot;: 58, &quot;wickets&quot;: 309, &quot;fours&quot;: 916, &quot;sixes&quot;: 380, &quot;runs_per_match&quot;: 177.48275862068965, &quot;run_rate&quot;: 9.109734513274336, &quot;boundary_share&quot;: 57.742374198562274, &quot;wickets_per_match&quot;: 5.327586206896552}, {&quot;batting_team&quot;: &quot;Kings XI Punjab&quot;, &quot;runs&quot;: 30064.0, &quot;matches&quot;: 190, &quot;wickets&quot;: 1158, &quot;fours&quot;: 2631, &quot;sixes&quot;: 1075, &quot;runs_per_match&quot;: 158.23157894736843, &quot;run_rate&quot;: 8.234832230084455, &quot;boundary_share&quot;: 56.459552953698775, &quot;wickets_per_match&quot;: 6.094736842105263}, {&quot;batting_team&quot;: &quot;Kochi Tuskers Kerala&quot;, &quot;runs&quot;: 1901.0, &quot;matches&quot;: 14, &quot;wickets&quot;: 86, &quot;fours&quot;: 170, &quot;sixes&quot;: 53, &quot;runs_per_match&quot;: 135.78571428571428, &quot;run_rate&quot;: 7.55364238410596, &quot;boundary_share&quot;: 52.498684902682804, &quot;wickets_per_match&quot;: 6.142857142857143}, {&quot;batting_team&quot;: &quot;Kolkata Knight Riders&quot;, &quot;runs&quot;: 41165.0, &quot;matches&quot;: 263, &quot;wickets&quot;: 1563, &quot;fours&quot;: 3623, &quot;sixes&quot;: 1584, &quot;runs_per_match&quot;: 156.52091254752852, &quot;run_rate&quot;: 8.3490518203022, &quot;boundary_share&quot;: 58.29223855216811, &quot;wickets_per_match&quot;: 5.942965779467681}, {&quot;batting_team&quot;: &quot;Lucknow Super Giants&quot;, &quot;runs&quot;: 10015.0, &quot;matches&quot;: 57, &quot;wickets&quot;: 355, &quot;fours&quot;: 778, &quot;sixes&quot;: 470, &quot;runs_per_match&quot;: 175.7017543859649, &quot;run_rate&quot;: 8.992816521999401, &quot;boundary_share&quot;: 59.23115327009486, &quot;wickets_per_match&quot;: 6.228070175438597}, {&quot;batting_team&quot;: &quot;Mumbai Indians&quot;, &quot;runs&quot;: 44473.0, &quot;matches&quot;: 274, &quot;wickets&quot;: 1641, &quot;fours&quot;: 3848, &quot;sixes&quot;: 1795, &quot;runs_per_match&quot;: 162.3102189781022, &quot;run_rate&quot;: 8.417868071547998, &quot;boundary_share&quot;: 58.826703842781015, &quot;wickets_per_match&quot;: 5.989051094890511}, {&quot;batting_team&quot;: &quot;Pune Warriors&quot;, &quot;runs&quot;: 6358.0, &quot;matches&quot;: 45, &quot;wickets&quot;: 298, &quot;fours&quot;: 525, &quot;sixes&quot;: 196, &quot;runs_per_match&quot;: 141.2888888888889, &quot;run_rate&quot;: 7.231848341232228, &quot;boundary_share&quot;: 51.52563699276502, &quot;wickets_per_match&quot;: 6.622222222222222}, {&quot;batting_team&quot;: &quot;Punjab Kings&quot;, &quot;runs&quot;: 11913.0, &quot;matches&quot;: 69, &quot;wickets&quot;: 441, &quot;fours&quot;: 993, &quot;sixes&quot;: 570, &quot;runs_per_match&quot;: 172.65217391304347, &quot;run_rate&quot;: 9.02158273381295, &quot;boundary_share&quot;: 62.04986149584487, &quot;wickets_per_match&quot;: 6.391304347826087}, {&quot;batting_team&quot;: &quot;Rajasthan Royals&quot;, &quot;runs&quot;: 37361.0, &quot;matches&quot;: 234, &quot;wickets&quot;: 1406, &quot;fours&quot;: 3302, &quot;sixes&quot;: 1383, &quot;runs_per_match&quot;: 159.66239316239316, &quot;run_rate&quot;: 8.323716163529019, &quot;boundary_share&quot;: 57.562699071224, &quot;wickets_per_match&quot;: 6.0085470085470085}, {&quot;batting_team&quot;: &quot;Rising Pune Supergiant&quot;, &quot;runs&quot;: 2470.0, &quot;matches&quot;: 16, &quot;wickets&quot;: 90, &quot;fours&quot;: 197, &quot;sixes&quot;: 89, &quot;runs_per_match&quot;: 154.375, &quot;run_rate&quot;: 8.041237113402062, &quot;boundary_share&quot;: 53.522267206477736, &quot;wickets_per_match&quot;: 5.625}, {&quot;batting_team&quot;: &quot;Rising Pune Supergiants&quot;, &quot;runs&quot;: 2063.0, &quot;matches&quot;: 14, &quot;wickets&quot;: 68, &quot;fours&quot;: 171, &quot;sixes&quot;: 68, &quot;runs_per_match&quot;: 147.35714285714286, &quot;run_rate&quot;: 8.138067061143984, &quot;boundary_share&quot;: 52.93262239457101, &quot;wickets_per_match&quot;: 4.857142857142857}, {&quot;batting_team&quot;: &quot;Royal Challengers Bangalore&quot;, &quot;runs&quot;: 37692.0, &quot;matches&quot;: 240, &quot;wickets&quot;: 1384, &quot;fours&quot;: 3149, &quot;sixes&quot;: 1488, &quot;runs_per_match&quot;: 157.05, &quot;run_rate&quot;: 8.311050678034618, &quot;boundary_share&quot;: 57.104955958824156, &quot;wickets_per_match&quot;: 5.766666666666667}, {&quot;batting_team&quot;: &quot;Royal Challengers Bengaluru&quot;, &quot;runs&quot;: 5057.0, &quot;matches&quot;: 27, &quot;wickets&quot;: 166, &quot;fours&quot;: 416, &quot;sixes&quot;: 269, &quot;runs_per_match&quot;: 187.2962962962963, &quot;run_rate&quot;: 9.844905905256327, &quot;boundary_share&quot;: 64.8210401423769, &quot;wickets_per_match&quot;: 6.148148148148148}, {&quot;batting_team&quot;: &quot;Sunrisers Hyderabad&quot;, &quot;runs&quot;: 31312.0, &quot;matches&quot;: 194, &quot;wickets&quot;: 1138, &quot;fours&quot;: 2602, &quot;sixes&quot;: 1143, &quot;runs_per_match&quot;: 161.4020618556701, &quot;run_rate&quot;: 8.372938764595775, &quot;boundary_share&quot;: 55.14179867143587, &quot;wickets_per_match&quot;: 5.865979381443299}], &quot;phase&quot;: [{&quot;phase&quot;: &quot;Powerplay (0–5)&quot;, &quot;runs&quot;: 110539.0, &quot;legal&quot;: 83388, &quot;wickets&quot;: 3352, &quot;run_rate&quot;: 7.953590444668298}, {&quot;phase&quot;: &quot;Middle (6–14)&quot;, &quot;runs&quot;: 160712.0, &quot;legal&quot;: 122834, &quot;wickets&quot;: 5300, &quot;run_rate&quot;: 7.850204340817689}, {&quot;phase&quot;: &quot;Death (15–19)&quot;, &quot;runs&quot;: 99540.0, &quot;legal&quot;: 59718, &quot;wickets&quot;: 5064, &quot;run_rate&quot;: 10.001004722194313}], &quot;bat&quot;: [{&quot;player&quot;: &quot;PD Salt&quot;, &quot;runs&quot;: 954.0, &quot;balls&quot;: 540, &quot;strike_rate&quot;: 176.66666666666666, &quot;matches&quot;: 31}, {&quot;player&quot;: &quot;AD Russell&quot;, &quot;runs&quot;: 2655.0, &quot;balls&quot;: 1507, &quot;strike_rate&quot;: 176.17783676177837, &quot;matches&quot;: 113}, {&quot;player&quot;: &quot;TM Head&quot;, &quot;runs&quot;: 1070.0, &quot;balls&quot;: 627, &quot;strike_rate&quot;: 170.65390749601278, &quot;matches&quot;: 36}, {&quot;player&quot;: &quot;N Pooran&quot;, &quot;runs&quot;: 2280.0, &quot;balls&quot;: 1345, &quot;strike_rate&quot;: 169.51672862453532, &quot;matches&quot;: 85}, {&quot;player&quot;: &quot;H Klaasen&quot;, &quot;runs&quot;: 1375.0, &quot;balls&quot;: 825, &quot;strike_rate&quot;: 166.66666666666669, &quot;matches&quot;: 44}, {&quot;player&quot;: &quot;SP Narine&quot;, &quot;runs&quot;: 1749.0, &quot;balls&quot;: 1051, &quot;strike_rate&quot;: 166.4129400570885, &quot;matches&quot;: 117}, {&quot;player&quot;: &quot;Abhishek Sharma&quot;, &quot;runs&quot;: 1784.0, &quot;balls&quot;: 1092, &quot;strike_rate&quot;: 163.36996336996336, &quot;matches&quot;: 73}, {&quot;player&quot;: &quot;LS Livingstone&quot;, &quot;runs&quot;: 1026.0, &quot;balls&quot;: 639, &quot;strike_rate&quot;: 160.56338028169014, &quot;matches&quot;: 45}, {&quot;player&quot;: &quot;V Sehwag&quot;, &quot;runs&quot;: 2728.0, &quot;balls&quot;: 1740, &quot;strike_rate&quot;: 156.7816091954023, &quot;matches&quot;: 104}, {&quot;player&quot;: &quot;P Simran Singh&quot;, &quot;runs&quot;: 1264.0, &quot;balls&quot;: 809, &quot;strike_rate&quot;: 156.24227441285538, &quot;matches&quot;: 47}, {&quot;player&quot;: &quot;GJ Maxwell&quot;, &quot;runs&quot;: 2820.0, &quot;balls&quot;: 1810, &quot;strike_rate&quot;: 155.8011049723757, &quot;matches&quot;: 134}, {&quot;player&quot;: &quot;RM Patidar&quot;, &quot;runs&quot;: 1056.0, &quot;balls&quot;: 688, &quot;strike_rate&quot;: 153.48837209302326, &quot;matches&quot;: 35}], &quot;bowl&quot;: [{&quot;player&quot;: &quot;A Kumble&quot;, &quot;wickets&quot;: 49, &quot;economy&quot;: 6.770984455958549, &quot;overs&quot;: 160.83333333333334, &quot;matches&quot;: 42}, {&quot;player&quot;: &quot;DL Vettori&quot;, &quot;wickets&quot;: 34, &quot;economy&quot;: 6.903474903474904, &quot;overs&quot;: 129.5, &quot;matches&quot;: 34}, {&quot;player&quot;: &quot;SP Narine&quot;, &quot;wickets&quot;: 210, &quot;economy&quot;: 6.915183730067022, &quot;overs&quot;: 721.1666666666666, &quot;matches&quot;: 186}, {&quot;player&quot;: &quot;M Muralitharan&quot;, &quot;wickets&quot;: 67, &quot;economy&quot;: 6.930628272251309, &quot;overs&quot;: 254.66666666666666, &quot;matches&quot;: 66}, {&quot;player&quot;: &quot;J Botha&quot;, &quot;wickets&quot;: 27, &quot;economy&quot;: 7.072046109510087, &quot;overs&quot;: 115.66666666666667, &quot;matches&quot;: 34}, {&quot;player&quot;: &quot;DW Steyn&quot;, &quot;wickets&quot;: 105, &quot;economy&quot;: 7.102658111824014, &quot;overs&quot;: 363.6666666666667, &quot;matches&quot;: 95}, {&quot;player&quot;: &quot;R Sharma&quot;, &quot;wickets&quot;: 42, &quot;economy&quot;: 7.112068965517242, &quot;overs&quot;: 154.66666666666666, &quot;matches&quot;: 44}, {&quot;player&quot;: &quot;Harbhajan Singh&quot;, &quot;wickets&quot;: 161, &quot;economy&quot;: 7.203161592505855, &quot;overs&quot;: 569.3333333333334, &quot;matches&quot;: 160}, {&quot;player&quot;: &quot;Rashid Khan&quot;, &quot;wickets&quot;: 165, &quot;economy&quot;: 7.207989854153457, &quot;overs&quot;: 525.6666666666666, &quot;matches&quot;: 134}, {&quot;player&quot;: &quot;MM Ali&quot;, &quot;wickets&quot;: 46, &quot;economy&quot;: 7.278688524590163, &quot;overs&quot;: 142.33333333333334, &quot;matches&quot;: 57}, {&quot;player&quot;: &quot;R Ashwin&quot;, &quot;wickets&quot;: 205, &quot;economy&quot;: 7.287898089171975, &quot;overs&quot;: 785.0, &quot;matches&quot;: 217}, {&quot;player&quot;: &quot;Iqbal Abdulla&quot;, &quot;wickets&quot;: 45, &quot;economy&quot;: 7.33695652173913, &quot;overs&quot;: 153.33333333333334, &quot;matches&quot;: 48}], &quot;venue&quot;: [{&quot;venue&quot;: &quot;Arun Jaitley Stadium, Delhi&quot;, &quot;matches&quot;: 22, &quot;runs_per_match&quot;: 381.3181818181818, &quot;run_rate&quot;: 9.69639761125024, &quot;wickets&quot;: 265}, {&quot;venue&quot;: &quot;Eden Gardens, Kolkata&quot;, &quot;matches&quot;: 23, &quot;runs_per_match&quot;: 372.4347826086956, &quot;run_rate&quot;: 9.906707787201235, &quot;wickets&quot;: 271}, {&quot;venue&quot;: &quot;M Chinnaswamy Stadium, Bengaluru&quot;, &quot;matches&quot;: 19, &quot;runs_per_match&quot;: 368.89473684210526, &quot;run_rate&quot;: 9.66092350103377, &quot;wickets&quot;: 238}, {&quot;venue&quot;: &quot;Rajiv Gandhi International Stadium, Uppal, Hyderabad&quot;, &quot;matches&quot;: 19, &quot;runs_per_match&quot;: 361.7368421052632, &quot;run_rate&quot;: 9.684828558008455, &quot;wickets&quot;: 207}, {&quot;venue&quot;: &quot;Sawai Mansingh Stadium, Jaipur&quot;, &quot;matches&quot;: 15, &quot;runs_per_match&quot;: 354.0, &quot;run_rate&quot;: 9.32396839332748, &quot;wickets&quot;: 150}, {&quot;venue&quot;: &quot;Narendra Modi Stadium, Ahmedabad&quot;, &quot;matches&quot;: 30, &quot;runs_per_match&quot;: 353.7, &quot;run_rate&quot;: 9.21627099015634, &quot;wickets&quot;: 358}, {&quot;venue&quot;: &quot;Brabourne Stadium&quot;, &quot;matches&quot;: 10, &quot;runs_per_match&quot;: 348.1, &quot;run_rate&quot;: 8.831289640591965, &quot;wickets&quot;: 120}, {&quot;venue&quot;: &quot;Punjab Cricket Association IS Bindra Stadium&quot;, &quot;matches&quot;: 10, &quot;runs_per_match&quot;: 347.6, &quot;run_rate&quot;: 8.86734693877551, &quot;wickets&quot;: 104}, {&quot;venue&quot;: &quot;Wankhede Stadium, Mumbai&quot;, &quot;matches&quot;: 52, &quot;runs_per_match&quot;: 344.5, &quot;run_rate&quot;: 8.982450275781382, &quot;wickets&quot;: 618}, {&quot;venue&quot;: &quot;Brabourne Stadium, Mumbai&quot;, &quot;matches&quot;: 17, &quot;runs_per_match&quot;: 342.5882352941176, &quot;run_rate&quot;: 9.017806451612902, &quot;wickets&quot;: 211}, {&quot;venue&quot;: &quot;M.Chinnaswamy Stadium&quot;, &quot;matches&quot;: 15, &quot;runs_per_match&quot;: 341.8, &quot;run_rate&quot;: 9.133610451306412, &quot;wickets&quot;: 179}, {&quot;venue&quot;: &quot;Saurashtra Cricket Association Stadium&quot;, &quot;matches&quot;: 10, &quot;runs_per_match&quot;: 333.3, &quot;run_rate&quot;: 8.67592190889371, &quot;wickets&quot;: 109}], &quot;seasons&quot;: [&quot;2007/08&quot;, &quot;2009&quot;, &quot;2009/10&quot;, &quot;2011&quot;, &quot;2012&quot;, &quot;2013&quot;, &quot;2014&quot;, &quot;2015&quot;, &quot;2016&quot;, &quot;2017&quot;, &quot;2018&quot;, &quot;2019&quot;, &quot;2020/21&quot;, &quot;2021&quot;, &quot;2022&quot;, &quot;2023&quot;, &quot;2024&quot;, &quot;2025&quot;], &quot;teams&quot;: [&quot;Chennai Super Kings&quot;, &quot;Deccan Chargers&quot;, &quot;Delhi Capitals&quot;, &quot;Delhi Daredevils&quot;, &quot;Gujarat Lions&quot;, &quot;Gujarat Titans&quot;, &quot;Kings XI Punjab&quot;, &quot;Kochi Tuskers Kerala&quot;, &quot;Kolkata Knight Riders&quot;, &quot;Lucknow Super Giants&quot;, &quot;Mumbai Indians&quot;, &quot;Pune Warriors&quot;, &quot;Punjab Kings&quot;, &quot;Rajasthan Royals&quot;, &quot;Rising Pune Supergiant&quot;, &quot;Rising Pune Supergiants&quot;, &quot;Royal Challengers Bangalore&quot;, &quot;Royal Challengers Bengaluru&quot;, &quot;Sunrisers Hyderabad&quot;]};
+// The source&#x27;s 2020/21 label refers to the IPL tournament played in 2020.
+D.season=D.season.map(row=&gt;({...row,season:row.season===&#x27;2020/21&#x27;?&#x27;2020&#x27;:row.season}));
+D.seasons=D.season.map(row=&gt;row.season);
+const teamAliases={
+ &#x27;Royal Challengers Bangalore&#x27;:&#x27;Royal Challengers Bengaluru&#x27;,
+ &#x27;Delhi Daredevils&#x27;:&#x27;Delhi Capitals&#x27;,
+ &#x27;Kings XI Punjab&#x27;:&#x27;Punjab Kings&#x27;,
+ &#x27;Rising Pune Supergiants&#x27;:&#x27;Rising Pune Supergiant&#x27;
+};
+const combinedTeams=new Map();
+for(const row of D.team){
+ const name=teamAliases[row.batting_team]||row.batting_team;
+ const legal=Math.round(row.runs*6/row.run_rate);
+ const combined=combinedTeams.get(name);
+ if(combined){
+  for(const key of [&#x27;runs&#x27;,&#x27;matches&#x27;,&#x27;wickets&#x27;,&#x27;fours&#x27;,&#x27;sixes&#x27;])combined[key]+=row[key];
+  combined.legal+=legal;
+ }else combinedTeams.set(name,{...row,batting_team:name,legal});
+}
+D.team=Array.from(combinedTeams.values()).map(row=&gt;({...row,
+ runs_per_match:row.runs/row.matches,
+ run_rate:row.runs*6/row.legal,
+ boundary_share:(row.fours*4+row.sixes*6)/row.runs*100,
+ wickets_per_match:row.wickets/row.matches
+}));
+D.teams=D.team.map(row=&gt;row.batting_team).sort();
+const fmt=n=&gt;Number(n||0).toLocaleString(&#x27;en-IN&#x27;,{maximumFractionDigits:1});
+const pct=n=&gt;(Number(n)||0).toFixed(1)+&#x27;%&#x27;;
+const rate=n=&gt;(Number(n)||0).toFixed(2);
+const C={green:&#x27;#36784c&#x27;,gold:&#x27;#eabf32&#x27;,blue:&#x27;#4779a8&#x27;,red:&#x27;#d96b65&#x27;,teal:&#x27;#4a9b91&#x27;,purple:&#x27;#8972b3&#x27;,gray:&#x27;#8c9b8e&#x27;};
+const base={paper_bgcolor:&#x27;white&#x27;,plot_bgcolor:&#x27;white&#x27;,font:{family:&#x27;Segoe UI,Arial&#x27;,size:10,color:&#x27;#33443a&#x27;},margin:{l:48,r:18,t:25,b:42},showlegend:false};
 const config={displayModeBar:false,responsive:true};
 function layout(id, extra={}){Plotly.newPlot(id,[],{...base,...extra},config)}
 function bar(id, labels, vals, title, color=C.green, horizontal=false, fmtText=false){
- const trace=horizontal?{type:'bar',orientation:'h',y:labels,x:vals,marker:{color},text:fmtText?vals.map(fmt):undefined,textposition:fmtText?'outside':undefined,hovertemplate:'%{y}<br>%{x:.2f}<extra></extra>'}:{type:'bar',x:labels,y:vals,marker:{color},hovertemplate:'%{x}<br>%{y:.2f}<extra></extra>'};
+ const trace=horizontal?{type:&#x27;bar&#x27;,orientation:&#x27;h&#x27;,y:labels,x:vals,marker:{color},text:fmtText?vals.map(fmt):undefined,textposition:fmtText?&#x27;outside&#x27;:undefined,hovertemplate:&#x27;%{y}&lt;br&gt;%{x:.2f}&lt;extra&gt;&lt;/extra&gt;&#x27;}:{type:&#x27;bar&#x27;,x:labels,y:vals,marker:{color},hovertemplate:&#x27;%{x}&lt;br&gt;%{y:.2f}&lt;extra&gt;&lt;/extra&gt;&#x27;};
  Plotly.newPlot(id,[trace],{...base,title:{text:title,font:{size:11}},xaxis:{automargin:true},yaxis:{automargin:true},margin:{l:horizontal?110:45,r:horizontal?45:15,t:35,b:45}},config);
 }
 function selected(){
- const s=document.getElementById('season').value,t=document.getElementById('team').value;
- let rows=D.team.filter(x=>(s==='ALL'||x.season===s)); // team rows are overall; use season rows below for season filter
+ const s=document.getElementById(&#x27;season&#x27;).value,t=document.getElementById(&#x27;team&#x27;).value;
+ let rows=D.team.filter(x=&gt;(s===&#x27;ALL&#x27;||x.season===s)); // team rows are overall; use season rows below for season filter
  return {s,t};
 }
 function draw(){
- const s=document.getElementById('season').value, team=document.getElementById('team').value;
- const seasonRows=D.season.filter(x=>s==='ALL'||x.season===s);
- const teamRows=D.team.filter(x=>team==='ALL'||x.batting_team===team).sort((a,b)=>b.runs_per_match-a.runs_per_match);
- const runs=seasonRows.reduce((a,x)=>a+x.runs,0), matches=seasonRows.reduce((a,x)=>a+x.matches,0);
- const wickets=seasonRows.reduce((a,x)=>a+x.wickets,0);
+ const s=document.getElementById(&#x27;season&#x27;).value, team=document.getElementById(&#x27;team&#x27;).value;
+ const seasonRows=D.season.filter(x=&gt;s===&#x27;ALL&#x27;||x.season===s);
+ const teamRows=D.team.filter(x=&gt;team===&#x27;ALL&#x27;||x.batting_team===team).sort((a,b)=&gt;b.runs_per_match-a.runs_per_match);
+ const runs=seasonRows.reduce((a,x)=&gt;a+x.runs,0), matches=seasonRows.reduce((a,x)=&gt;a+x.matches,0);
+ const wickets=seasonRows.reduce((a,x)=&gt;a+x.wickets,0);
  const avgRuns=matches?runs/matches:0;
- const rr=matches?seasonRows.reduce((a,x)=>a+x.run_rate*x.matches,0)/matches:0;
- const boundary=matches?seasonRows.reduce((a,x)=>a+x.boundary_share*x.runs,0)/Math.max(1,runs):0;
- const k=[['MATCHES IN VIEW',fmt(matches),'Scope changes with season filter'],['RUNS PER MATCH',fmt(avgRuns),'Better for comparing seasons'],['SCORING RATE',rate(rr),'Runs per six legal deliveries'],['WICKETS PER MATCH',rate(matches?wickets/matches:0),'A rough signal of innings disruption'],['BOUNDARY RUN SHARE',pct(boundary),'Share of runs from fours and sixes'],['TEAMS IN VIEW',fmt(teamRows.length),'Teams available after filter']];
- document.getElementById('kpis').innerHTML=k.map((x,i)=>`<div class="kpi"><div class="label">${x[0]}</div><div class="val">${x[1]}</div><div class="desc">${x[2]}</div></div>`).join('');
- const sr=seasonRows.slice().sort((a,b)=>Number(a.season.slice(0,4))-Number(b.season.slice(0,4)));
- Plotly.newPlot('seasonRate',[{type:'scatter',mode:'lines+markers',x:sr.map(x=>x.season),y:sr.map(x=>x.run_rate),line:{color:C.green,width:3},marker:{size:7,color:C.gold},customdata:sr.map(x=>[x.matches,x.runs_per_match,x.boundary_share]),hovertemplate:'Season %{x}<br>Run rate %{y:.2f}<br>Matches %{customdata[0]}<br>Runs/match %{customdata[1]:.0f}<br>Boundary share %{customdata[2]:.1f}%<extra></extra>'}],{...base,yaxis:{title:'Runs per over'},xaxis:{automargin:true},margin:{l:45,r:15,t:20,b:55}},config);
- Plotly.newPlot('seasonScatter',[{type:'scatter',mode:'markers+text',x:sr.map(x=>x.matches),y:sr.map(x=>x.runs_per_match),text:sr.map(x=>x.season),textposition:'top center',marker:{size:sr.map(x=>Math.max(8,Math.sqrt(x.runs)/3)),color:sr.map(x=>x.run_rate),colorscale:'YlGn',showscale:true,colorbar:{title:'RR',thickness:8},line:{color:'white',width:1}},customdata:sr.map(x=>[x.runs,x.run_rate]),hovertemplate:'%{text}<br>Matches %{x}<br>Runs/match %{y:.0f}<br>Total runs %{customdata[0]:,}<br>Run rate %{customdata[1]:.2f}<extra></extra>'}],{...base,xaxis:{title:'Matches in dataset'},yaxis:{title:'Runs per match'},margin:{l:50,r:45,t:20,b:45}},config);
- bar('teamRPM',teamRows.slice(0,12).sort((a,b)=>a.runs_per_match-b.runs_per_match).map(x=>x.batting_team),teamRows.slice(0,12).sort((a,b)=>a.runs_per_match-b.runs_per_match).map(x=>x.runs_per_match),'Average runs per match',C.blue,true);
- Plotly.newPlot('teamScatter',[{type:'scatter',mode:'markers+text',x:teamRows.map(x=>x.boundary_share),y:teamRows.map(x=>x.run_rate),text:teamRows.map(x=>x.batting_team),textposition:'top center',marker:{size:10,color:teamRows.map(x=>x.wickets_per_match),colorscale:'Viridis',showscale:true,colorbar:{title:'Wkts/match',thickness:8},line:{color:'white',width:1}},customdata:teamRows.map(x=>[x.runs_per_match,x.matches]),hovertemplate:'%{text}<br>Boundary share %{x:.1f}%<br>Run rate %{y:.2f}<br>Runs/match %{customdata[0]:.0f}<br>Matches %{customdata[1]}<extra></extra>'}],{...base,xaxis:{title:'Runs from boundaries (%)'},yaxis:{title:'Run rate'},margin:{l:45,r:40,t:20,b:45}},config);
- Plotly.newPlot('phaseChart',[{type:'bar',x:D.phase.map(x=>x.phase),y:D.phase.map(x=>x.run_rate),marker:{color:[C.green,C.gold,C.red]},text:D.phase.map(x=>rate(x.run_rate)),textposition:'outside',customdata:D.phase.map(x=>[x.runs,x.wickets]),hovertemplate:'%{x}<br>Run rate %{y:.2f}<br>Runs %{customdata[0]:,}<br>Wickets %{customdata[1]:,}<extra></extra>'}],{...base,yaxis:{title:'Runs per over'},margin:{l:45,r:15,t:20,b:55}},config);
- bar('batChart',D.bat.slice().sort((a,b)=>a.strike_rate-b.strike_rate).map(x=>x.player),D.bat.slice().sort((a,b)=>a.strike_rate-b.strike_rate).map(x=>x.strike_rate),'Strike rate (500+ balls, 20+ matches)',C.teal,true);
- bar('bowlChart',D.bowl.slice().sort((a,b)=>b.economy-a.economy).map(x=>x.player),D.bowl.slice().sort((a,b)=>b.economy-a.economy).map(x=>x.economy),'Economy rate (100+ overs, 20+ matches)',C.purple,true);
- bar('venueChart',D.venue.slice().sort((a,b)=>a.runs_per_match-b.runs_per_match).map(x=>x.venue),D.venue.slice().sort((a,b)=>a.runs_per_match-b.runs_per_match).map(x=>x.runs_per_match),'Runs per match (10+ matches)',C.red,true);
- const best=sr.slice().sort((a,b)=>b.runs_per_match-a.runs_per_match)[0], fastest=sr.slice().sort((a,b)=>b.run_rate-a.run_rate)[0], boundaryTeam=teamRows.slice().sort((a,b)=>b.boundary_share-a.boundary_share)[0], paceTeam=teamRows.slice().sort((a,b)=>b.run_rate-a.run_rate)[0], highWicket=teamRows.slice().sort((a,b)=>b.wickets_per_match-a.wickets_per_match)[0];
+ const rr=matches?seasonRows.reduce((a,x)=&gt;a+x.run_rate*x.matches,0)/matches:0;
+ const boundary=matches?seasonRows.reduce((a,x)=&gt;a+x.boundary_share*x.runs,0)/Math.max(1,runs):0;
+ const k=[[&#x27;MATCHES IN VIEW&#x27;,fmt(matches),&#x27;Scope changes with season filter&#x27;],[&#x27;RUNS PER MATCH&#x27;,fmt(avgRuns),&#x27;Better for comparing seasons&#x27;],[&#x27;SCORING RATE&#x27;,rate(rr),&#x27;Runs per six legal deliveries&#x27;],[&#x27;WICKETS PER MATCH&#x27;,rate(matches?wickets/matches:0),&#x27;A rough signal of innings disruption&#x27;],[&#x27;BOUNDARY RUN SHARE&#x27;,pct(boundary),&#x27;Share of runs from fours and sixes&#x27;],[&#x27;TEAMS IN VIEW&#x27;,fmt(teamRows.length),&#x27;Teams available after filter&#x27;]];
+ document.getElementById(&#x27;kpis&#x27;).innerHTML=k.map((x,i)=&gt;`&lt;div class=&quot;kpi&quot;&gt;&lt;div class=&quot;label&quot;&gt;${x[0]}&lt;/div&gt;&lt;div class=&quot;val&quot;&gt;${x[1]}&lt;/div&gt;&lt;div class=&quot;desc&quot;&gt;${x[2]}&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
+ const sr=seasonRows.slice().sort((a,b)=&gt;Number(a.season.slice(0,4))-Number(b.season.slice(0,4)));
+ Plotly.newPlot(&#x27;seasonRate&#x27;,[{type:&#x27;scatter&#x27;,mode:&#x27;lines+markers&#x27;,x:sr.map(x=&gt;x.season),y:sr.map(x=&gt;x.run_rate),line:{color:C.green,width:3},marker:{size:7,color:C.gold},customdata:sr.map(x=&gt;[x.matches,x.runs_per_match,x.boundary_share]),hovertemplate:&#x27;Season %{x}&lt;br&gt;Run rate %{y:.2f}&lt;br&gt;Matches %{customdata[0]}&lt;br&gt;Runs/match %{customdata[1]:.0f}&lt;br&gt;Boundary share %{customdata[2]:.1f}%&lt;extra&gt;&lt;/extra&gt;&#x27;}],{...base,yaxis:{title:&#x27;Runs per over&#x27;},xaxis:{type:&#x27;category&#x27;,tickmode:&#x27;array&#x27;,tickvals:sr.map(x=&gt;x.season),ticktext:sr.map(x=&gt;x.season),tickangle:-45,automargin:true},margin:{l:45,r:15,t:20,b:55}},config);
+ Plotly.newPlot(&#x27;seasonScatter&#x27;,[{type:&#x27;scatter&#x27;,mode:&#x27;markers+text&#x27;,x:sr.map(x=&gt;x.matches),y:sr.map(x=&gt;x.runs_per_match),text:sr.map(x=&gt;x.season),textposition:&#x27;top center&#x27;,marker:{size:sr.map(x=&gt;Math.max(8,Math.sqrt(x.runs)/3)),color:sr.map(x=&gt;x.run_rate),colorscale:&#x27;YlGn&#x27;,showscale:true,colorbar:{title:&#x27;RR&#x27;,thickness:8},line:{color:&#x27;white&#x27;,width:1}},customdata:sr.map(x=&gt;[x.runs,x.run_rate]),hovertemplate:&#x27;%{text}&lt;br&gt;Matches %{x}&lt;br&gt;Runs/match %{y:.0f}&lt;br&gt;Total runs %{customdata[0]:,}&lt;br&gt;Run rate %{customdata[1]:.2f}&lt;extra&gt;&lt;/extra&gt;&#x27;}],{...base,xaxis:{title:&#x27;Matches in dataset&#x27;},yaxis:{title:&#x27;Runs per match&#x27;},margin:{l:50,r:45,t:20,b:45}},config);
+ bar(&#x27;teamRPM&#x27;,teamRows.slice(0,12).sort((a,b)=&gt;a.runs_per_match-b.runs_per_match).map(x=&gt;x.batting_team),teamRows.slice(0,12).sort((a,b)=&gt;a.runs_per_match-b.runs_per_match).map(x=&gt;x.runs_per_match),&#x27;Average runs per match&#x27;,C.blue,true);
+ Plotly.newPlot(&#x27;teamScatter&#x27;,[{type:&#x27;scatter&#x27;,mode:&#x27;markers+text&#x27;,x:teamRows.map(x=&gt;x.boundary_share),y:teamRows.map(x=&gt;x.run_rate),text:teamRows.map(x=&gt;x.batting_team),textposition:&#x27;top center&#x27;,marker:{size:10,color:teamRows.map(x=&gt;x.wickets_per_match),colorscale:&#x27;Viridis&#x27;,showscale:true,colorbar:{title:&#x27;Wkts/match&#x27;,thickness:8},line:{color:&#x27;white&#x27;,width:1}},customdata:teamRows.map(x=&gt;[x.runs_per_match,x.matches]),hovertemplate:&#x27;%{text}&lt;br&gt;Boundary share %{x:.1f}%&lt;br&gt;Run rate %{y:.2f}&lt;br&gt;Runs/match %{customdata[0]:.0f}&lt;br&gt;Matches %{customdata[1]}&lt;extra&gt;&lt;/extra&gt;&#x27;}],{...base,xaxis:{title:&#x27;Runs from boundaries (%)&#x27;},yaxis:{title:&#x27;Run rate&#x27;},margin:{l:45,r:40,t:20,b:45}},config);
+ Plotly.newPlot(&#x27;phaseChart&#x27;,[{type:&#x27;bar&#x27;,x:D.phase.map(x=&gt;x.phase),y:D.phase.map(x=&gt;x.run_rate),marker:{color:[C.green,C.gold,C.red]},text:D.phase.map(x=&gt;rate(x.run_rate)),textposition:&#x27;outside&#x27;,customdata:D.phase.map(x=&gt;[x.runs,x.wickets]),hovertemplate:&#x27;%{x}&lt;br&gt;Run rate %{y:.2f}&lt;br&gt;Runs %{customdata[0]:,}&lt;br&gt;Wickets %{customdata[1]:,}&lt;extra&gt;&lt;/extra&gt;&#x27;}],{...base,yaxis:{title:&#x27;Runs per over&#x27;},margin:{l:45,r:15,t:20,b:55}},config);
+ bar(&#x27;batChart&#x27;,D.bat.slice().sort((a,b)=&gt;a.strike_rate-b.strike_rate).map(x=&gt;x.player),D.bat.slice().sort((a,b)=&gt;a.strike_rate-b.strike_rate).map(x=&gt;x.strike_rate),&#x27;Strike rate (500+ balls, 20+ matches)&#x27;,C.teal,true);
+ bar(&#x27;bowlChart&#x27;,D.bowl.slice().sort((a,b)=&gt;b.economy-a.economy).map(x=&gt;x.player),D.bowl.slice().sort((a,b)=&gt;b.economy-a.economy).map(x=&gt;x.economy),&#x27;Economy rate (100+ overs, 20+ matches)&#x27;,C.purple,true);
+ drawExtra(teamRows);
+ bar(&#x27;venueChart&#x27;,D.venue.slice().sort((a,b)=&gt;a.runs_per_match-b.runs_per_match).map(x=&gt;x.venue),D.venue.slice().sort((a,b)=&gt;a.runs_per_match-b.runs_per_match).map(x=&gt;x.runs_per_match),&#x27;Runs per match (10+ matches)&#x27;,C.red,true);
+ const best=sr.slice().sort((a,b)=&gt;b.runs_per_match-a.runs_per_match)[0], fastest=sr.slice().sort((a,b)=&gt;b.run_rate-a.run_rate)[0], boundaryTeam=teamRows.slice().sort((a,b)=&gt;b.boundary_share-a.boundary_share)[0], paceTeam=teamRows.slice().sort((a,b)=&gt;b.run_rate-a.run_rate)[0], highWicket=teamRows.slice().sort((a,b)=&gt;b.wickets_per_match-a.wickets_per_match)[0];
  const cards=[
- ['Highest runs per match',best?`${best.season} averages ${fmt(best.runs_per_match)} runs per match.`:'Not enough data.','This adjusts for match volume, so it is more useful than total season runs.'],
- ['Fastest season scoring pace',fastest?`${fastest.season} scores at ${rate(fastest.run_rate)} runs per over.`:'Not enough data.','Run rate measures tempo; it does not by itself prove better results or stronger teams.'],
- ['Most boundary-reliant team',boundaryTeam?`${boundaryTeam.batting_team}: ${pct(boundaryTeam.boundary_share)} of runs from fours and sixes.`:'Not enough data.','Boundary dependence can help explain style, but pair it with wickets and run rate.'],
- ['Quickest team scoring pace',paceTeam?`${paceTeam.batting_team} records ${rate(paceTeam.run_rate)} runs per over.`:'Not enough data.','Compare the run rate against boundary share to see whether pace comes from boundaries or running.'],
- ['Highest wickets per match',highWicket?`${highWicket.batting_team} is associated with ${rate(highWicket.wickets_per_match)} wickets per match in batting records.`:'Not enough data.','Treat this as descriptive: wicket events may include different dismissal types and team exposure differs.'],
- ['How to read this dashboard','Use rates and ratios before ranking teams on totals.','Filter one season, compare teams, then reset to All seasons to understand context.']
+ [&#x27;Highest runs per match&#x27;,best?`${best.season} averages ${fmt(best.runs_per_match)} runs per match.`:&#x27;Not enough data.&#x27;,&#x27;This adjusts for match volume, so it is more useful than total season runs.&#x27;],
+ [&#x27;Fastest season scoring pace&#x27;,fastest?`${fastest.season} scores at ${rate(fastest.run_rate)} runs per over.`:&#x27;Not enough data.&#x27;,&#x27;Run rate measures tempo; it does not by itself prove better results or stronger teams.&#x27;],
+ [&#x27;Most boundary-reliant team&#x27;,boundaryTeam?`${boundaryTeam.batting_team}: ${pct(boundaryTeam.boundary_share)} of runs from fours and sixes.`:&#x27;Not enough data.&#x27;,&#x27;Boundary dependence can help explain style, but pair it with wickets and run rate.&#x27;],
+ [&#x27;Quickest team scoring pace&#x27;,paceTeam?`${paceTeam.batting_team} records ${rate(paceTeam.run_rate)} runs per over.`:&#x27;Not enough data.&#x27;,&#x27;Compare the run rate against boundary share to see whether pace comes from boundaries or running.&#x27;],
+ [&#x27;Highest wickets per match&#x27;,highWicket?`${highWicket.batting_team} is associated with ${rate(highWicket.wickets_per_match)} wickets per match in batting records.`:&#x27;Not enough data.&#x27;,&#x27;Treat this as descriptive: wicket events may include different dismissal types and team exposure differs.&#x27;],
+ [&#x27;How to read this dashboard&#x27;,&#x27;Use rates and ratios before ranking teams on totals.&#x27;,&#x27;Filter one season, compare teams, then reset to All seasons to understand context.&#x27;]
  ];
- document.getElementById('insights').innerHTML=cards.map(c=>`<div class="insight"><b>${c[0]}</b><p>${c[1]}<br>${c[2]}</p></div>`).join('');
+ document.getElementById(&#x27;insights&#x27;).innerHTML=cards.map(c=&gt;`&lt;div class=&quot;insight&quot;&gt;&lt;b&gt;${c[0]}&lt;/b&gt;&lt;p&gt;${c[1]}&lt;br&gt;${c[2]}&lt;/p&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
 }
-D.seasons.forEach(s=>document.getElementById('season').insertAdjacentHTML('beforeend',`<option value="${s}">${s}</option>`));
-D.teams.forEach(t=>document.getElementById('team').insertAdjacentHTML('beforeend',`<option value="${t}">${t}</option>`));
-document.getElementById('season').addEventListener('change',draw);document.getElementById('team').addEventListener('change',draw);draw();
-</script></body></html>
+
+const PC=[C.green,C.gold,C.red,C.blue,C.teal,C.purple,&#x27;#c98a3d&#x27;,&#x27;#5d8f6e&#x27;,C.gray];
+function pie(id,labels,vals,hole=0){Plotly.newPlot(id,[{type:&#x27;pie&#x27;,labels,values:vals,hole,marker:{colors:PC,line:{color:&#x27;white&#x27;,width:2}},textinfo:&#x27;percent&#x27;,hovertemplate:&#x27;%{label}&lt;br&gt;%{value:,.0f} (%{percent})&lt;extra&gt;&lt;/extra&gt;&#x27;,sort:false}],{...base,showlegend:true,legend:{font:{size:9}},margin:{l:10,r:10,t:10,b:10}},config)}
+function drawExtra(teamRows){
+ pie(&#x27;phasePie&#x27;,D.phase.map(x=&gt;x.phase),D.phase.map(x=&gt;x.runs));
+ pie(&#x27;phaseDonut&#x27;,D.phase.map(x=&gt;x.phase),D.phase.map(x=&gt;x.wickets),.55);
+ const t=D.team.slice().sort((a,b)=&gt;b.runs-a.runs),top=t.slice(0,8),rest=t.slice(8).reduce((a,x)=&gt;a+x.runs,0);
+ pie(&#x27;teamPie&#x27;,[...top.map(x=&gt;x.batting_team),&#x27;Others&#x27;],[...top.map(x=&gt;x.runs),rest]);
+ const f=teamRows.reduce((a,x)=&gt;a+x.fours*4,0),sx=teamRows.reduce((a,x)=&gt;a+x.sixes*6,0),r=teamRows.reduce((a,x)=&gt;a+x.runs,0);
+ pie(&#x27;boundaryDonut&#x27;,[&#x27;Fours&#x27;,&#x27;Sixes&#x27;,&#x27;Other runs&#x27;],[f,sx,Math.max(0,r-f-sx)],.55);
+ drawTeam();
+}
+function drawTeam(){
+ const name=document.getElementById(&#x27;ttTeam&#x27;).value,x=D.team.find(t=&gt;t.batting_team===name);if(!x)return;
+ const avg=k=&gt;D.team.reduce((a,t)=&gt;a+t[k],0)/D.team.length;
+ const rank=k=&gt;D.team.slice().sort((a,b)=&gt;b[k]-a[k]).findIndex(t=&gt;t.batting_team===name)+1;
+ const k=[[&#x27;MATCHES&#x27;,fmt(x.matches),&#x27;In the dataset&#x27;],[&#x27;TOTAL RUNS&#x27;,fmt(x.runs),&#x27;Rank #&#x27;+rank(&#x27;runs&#x27;)],[&#x27;RUNS PER MATCH&#x27;,fmt(x.runs_per_match),&#x27;Rank #&#x27;+rank(&#x27;runs_per_match&#x27;)+&#x27; of &#x27;+D.team.length],[&#x27;RUN RATE&#x27;,rate(x.run_rate),&#x27;League avg &#x27;+rate(avg(&#x27;run_rate&#x27;))],[&#x27;FOURS / SIXES&#x27;,fmt(x.fours)+&#x27; / &#x27;+fmt(x.sixes),&#x27;Six rank #&#x27;+rank(&#x27;sixes&#x27;)],[&#x27;WICKETS PER MATCH&#x27;,rate(x.wickets_per_match),&#x27;League avg &#x27;+rate(avg(&#x27;wickets_per_match&#x27;))]];
+ document.getElementById(&#x27;ttKpis&#x27;).innerHTML=k.map(c=&gt;`&lt;div class=&quot;kpi&quot;&gt;&lt;div class=&quot;label&quot;&gt;${c[0]}&lt;/div&gt;&lt;div class=&quot;val&quot;&gt;${c[1]}&lt;/div&gt;&lt;div class=&quot;desc&quot;&gt;${c[2]}&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
+ const f=x.fours*4,sx=x.sixes*6;
+ pie(&#x27;ttDonut&#x27;,[&#x27;Fours&#x27;,&#x27;Sixes&#x27;,&#x27;Other runs&#x27;],[f,sx,Math.max(0,x.runs-f-sx)],.55);
+ const m=[[&#x27;Runs/match&#x27;,&#x27;runs_per_match&#x27;],[&#x27;Run rate&#x27;,&#x27;run_rate&#x27;],[&#x27;Boundary share&#x27;,&#x27;boundary_share&#x27;],[&#x27;Wickets/match&#x27;,&#x27;wickets_per_match&#x27;]];
+ const v=m.map(([_,k])=&gt;x[k]/avg(k)*100);
+ Plotly.newPlot(&#x27;ttCompare&#x27;,[{type:&#x27;bar&#x27;,x:m.map(a=&gt;a[0]),y:v,marker:{color:v.map(n=&gt;n&gt;=100?C.green:C.red)},text:v.map(n=&gt;n.toFixed(0)),textposition:&#x27;outside&#x27;,hovertemplate:&#x27;%{x}&lt;br&gt;%{y:.0f}% of league avg&lt;extra&gt;&lt;/extra&gt;&#x27;}],{...base,yaxis:{title:&#x27;% of league avg&#x27;},shapes:[{type:&#x27;line&#x27;,xref:&#x27;paper&#x27;,x0:0,x1:1,y0:100,y1:100,line:{dash:&#x27;dot&#x27;,color:C.gray}}],margin:{l:45,r:15,t:20,b:40}},config);
+ const rows=D.team.slice().sort((a,b)=&gt;b.runs_per_match-a.runs_per_match);
+ document.getElementById(&#x27;ttTable&#x27;).innerHTML=&#x27;&lt;table style=&quot;width:100%;border-collapse:collapse;font-size:11px&quot;&gt;&lt;tr style=&quot;text-align:left;border-bottom:1px solid var(--line)&quot;&gt;&#x27;+[&#x27;#&#x27;,&#x27;Team&#x27;,&#x27;Matches&#x27;,&#x27;Runs&#x27;,&#x27;Runs/match&#x27;,&#x27;Run rate&#x27;,&#x27;Fours&#x27;,&#x27;Sixes&#x27;,&#x27;Boundary %&#x27;,&#x27;Wkts/match&#x27;].map(h=&gt;`&lt;th style=&quot;padding:5px&quot;&gt;${h}&lt;/th&gt;`).join(&#x27;&#x27;)+&#x27;&lt;/tr&gt;&#x27;+rows.map((t,i)=&gt;`&lt;tr style=&quot;border-bottom:1px solid var(--line);${t.batting_team===name?&#x27;background:#eef5ef;font-weight:700&#x27;:&#x27;&#x27;}&quot;&gt;&lt;td style=&quot;padding:5px&quot;&gt;${i+1}&lt;/td&gt;&lt;td&gt;${t.batting_team}&lt;/td&gt;&lt;td&gt;${t.matches}&lt;/td&gt;&lt;td&gt;${fmt(t.runs)}&lt;/td&gt;&lt;td&gt;${fmt(t.runs_per_match)}&lt;/td&gt;&lt;td&gt;${rate(t.run_rate)}&lt;/td&gt;&lt;td&gt;${fmt(t.fours)}&lt;/td&gt;&lt;td&gt;${fmt(t.sixes)}&lt;/td&gt;&lt;td&gt;${pct(t.boundary_share)}&lt;/td&gt;&lt;td&gt;${rate(t.wickets_per_match)}&lt;/td&gt;&lt;/tr&gt;`).join(&#x27;&#x27;)+&#x27;&lt;/table&gt;&#x27;;
+}
+D.teams.forEach(t=&gt;document.getElementById(&#x27;ttTeam&#x27;).insertAdjacentHTML(&#x27;beforeend&#x27;,`&lt;option value=&quot;${t}&quot;&gt;${t}&lt;/option&gt;`));
+document.getElementById(&#x27;ttTeam&#x27;).addEventListener(&#x27;change&#x27;,drawTeam);
+D.seasons.forEach(s=&gt;document.getElementById(&#x27;season&#x27;).insertAdjacentHTML(&#x27;beforeend&#x27;,`&lt;option value=&quot;${s}&quot;&gt;${s}&lt;/option&gt;`));
+D.teams.forEach(t=&gt;document.getElementById(&#x27;team&#x27;).insertAdjacentHTML(&#x27;beforeend&#x27;,`&lt;option value=&quot;${t}&quot;&gt;${t}&lt;/option&gt;`));
+document.getElementById(&#x27;season&#x27;).addEventListener(&#x27;change&#x27;,draw);document.getElementById(&#x27;team&#x27;).addEventListener(&#x27;change&#x27;,e=&gt;{if(e.target.value!==&#x27;ALL&#x27;)document.getElementById(&#x27;ttTeam&#x27;).value=e.target.value;draw()});draw();
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;" title="IPL Performance Intelligence" class="block h-screen w-full border-0"></iframe><script>(function(a,f){let l;try{l=JSON.parse(sessionStorage.getItem(a)||"{}")}catch{return}const n=l?.[f||history.state?.__TSR_key];let c=!1;for(const t in n){const e=n[t],o=e?.scrollX,s=e?.scrollY;if(Number.isFinite(o)&&Number.isFinite(s)){if(t==="window")scrollTo(o,s),c=!0;else if(t)try{const r=document.querySelector(t);r&&(r.scrollLeft=o,r.scrollTop=s)}catch{}}}if(c)return;const i=location.hash.slice(1);if(i){const t=history.state?.__hashScrollIntoViewOptions??!0;if(t){const e=document.getElementById(i);e&&e.scrollIntoView(t)}return}scrollTo(0,0)})("tsr-scroll-restoration-v1_3");document.currentScript.remove()</script><!--/$--><script data-tsr-stream-part="">(self.$R=self.$R||{})["tsr"]=[];self.$_TSR={h(){this.hydrated=!0,this.c()},e(){this.streamEnded=!0,this.c()},c(){this.hydrated&&this.streamEnded&&(delete self.$_TSR,delete self.$R.tsr)},p(e){this.initialized?e():this.buffer.push(e)},buffer:[]};$_TSR.router=($R=>$R[0]={manifest:$R[1]={routes:$R[2]={__root__:$R[3]={preloads:$R[4]=["/assets/index-_80g8HcA.js"],scripts:$R[5]=[$R[6]={attrs:$R[7]={type:"module",async:!0,src:"/assets/index-_80g8HcA.js"}}]},"/":$R[8]={preloads:$R[9]=["/assets/routes-D6IBCu2m.js"]}}},matches:$R[10]=[$R[11]={i:"__root__",u:1793182594670,s:"success",ssr:!0},$R[12]={i:"",u:1793182594670,s:"success",ssr:!0}]})($R["tsr"]);$_TSR.e();{let s=document.currentScript,p;while((p=s.previousElementSibling)&&p.hasAttribute('data-tsr-stream-part'))p.remove();s.remove()}</script><script type="module" async="" src="/assets/index-_80g8HcA.js"></script><script>document.currentScript.remove();/*$tsr-stream-boundary*/</script>
+<aside
+	id="lovable-badge"
+	role="complementary"
+	dir="ltr"
+	lang="en"
+	aria-label="Edit with Lovable">
+	<a
+		id="lovable-badge-cta" 
+		target="_blank" 
+		href="https://lovable.dev/projects/lovp_2wtybee0vy916vx1bxjhg42z52?utm_source=lovable-badge"
+		rel="noopener nofollow"
+		aria-label="Edit with Lovable">
+		<span id="lovable-badge-text">Edit with</span>
+		<span id="lovable-badge-logo"><svg xmlns="http://www.w3.org/2000/svg" width="52" height="16" fill="none" viewBox="0 0 52 16">
+  <path fill="#FCFBF8" fill-rule="evenodd" d="M20.318 5.25c.643 0 1.206.14 1.69.418a2.81 2.81 0 0 1 1.118 1.191c.266.513.4 1.115.4 1.807s-.134 1.296-.4 1.812a2.81 2.81 0 0 1-1.118 1.193c-.484.278-1.047.418-1.69.418s-1.208-.14-1.695-.418a2.85 2.85 0 0 1-1.125-1.193c-.262-.516-.393-1.12-.393-1.812s.131-1.294.393-1.807a2.848 2.848 0 0 1 1.125-1.191c.487-.279 1.052-.418 1.695-.418Zm0 1.425c-.27 0-.504.076-.7.228-.193.147-.34.37-.443.67-.102.295-.153.66-.153 1.093 0 .435.05.801.153 1.1.102.3.25.524.443.676.196.147.43.22.7.22.27 0 .502-.073.694-.22.193-.152.341-.375.443-.67.103-.299.153-.667.153-1.106 0-.65-.112-1.145-.337-1.481a1.08 1.08 0 0 0-.953-.51ZM32.7 5.25c.61 0 1.127.1 1.549.3.422.197.74.48.953.849.217.368.325.809.325 1.32v2.704c0 .29.02.562.062.812.044.245.108.4.19.466V12h-1.935a5.895 5.895 0 0 1-.105-.684 7.745 7.745 0 0 1-.02-.228 2.293 2.293 0 0 1-.151.203c-.205.242-.47.437-.793.584-.32.143-.685.215-1.094.215-.406 0-.77-.08-1.094-.24a1.845 1.845 0 0 1-.756-.682 1.984 1.984 0 0 1-.27-1.045c0-.606.178-1.069.535-1.388.356-.324.87-.534 1.542-.633l1.125-.16c.225-.032.403-.074.534-.123a.622.622 0 0 0 .288-.196.549.549 0 0 0 .093-.327.65.65 0 0 0-.11-.367.702.702 0 0 0-.32-.27c-.14-.07-.31-.105-.51-.105-.32 0-.576.083-.768.251-.193.164-.298.39-.314.676h-1.923c.016-.434.147-.82.393-1.155.25-.34.596-.604 1.039-.792.442-.189.954-.283 1.535-.283Zm.99 3.498a.98.98 0 0 1-.215.14 2.49 2.49 0 0 1-.584.178l-.473.092c-.315.061-.553.156-.713.283-.155.127-.233.305-.233.534 0 .23.084.412.252.547.168.135.383.203.645.203s.494-.058.694-.173c.201-.118.355-.282.461-.49.11-.21.166-.448.166-.714v-.6Zm4.526-2.375c.065-.125.138-.243.221-.349.197-.25.437-.44.719-.571.282-.135.6-.203.952-.203.528 0 .988.138 1.377.412.389.275.688.67.896 1.186.21.512.314 1.12.314 1.824 0 .7-.107 1.309-.32 1.825-.213.512-.518.906-.915 1.18-.393.275-.854.412-1.383.412-.352 0-.667-.062-.946-.184a1.832 1.832 0 0 1-.7-.554 2.2 2.2 0 0 1-.234-.383V12h-1.843V3h1.862v3.373Zm1.284.296c-.274 0-.51.085-.707.253-.192.163-.338.397-.436.7a3.376 3.376 0 0 0-.148 1.05c0 .406.05.759.148 1.058.098.299.243.53.436.694.197.164.433.246.707.246.279 0 .512-.082.7-.246.193-.164.336-.395.43-.694.099-.3.148-.652.148-1.058 0-.405-.05-.757-.147-1.056-.095-.299-.238-.53-.43-.694a1.015 1.015 0 0 0-.7-.253Zm9.416-1.419c.602 0 1.136.131 1.604.393.466.262.829.643 1.086 1.143.263.5.394 1.097.394 1.794 0 .25-.002.449-.006.596H47.51c.018.288.071.538.164.75a1.3 1.3 0 0 0 .491.596c.214.13.465.196.757.196.319 0 .583-.082.792-.246.209-.167.34-.403.393-.706h1.862a2.48 2.48 0 0 1-.485 1.235 2.54 2.54 0 0 1-1.051.805c-.439.188-.949.283-1.53.283-.655 0-1.225-.125-1.708-.375a2.672 2.672 0 0 1-1.13-1.143c-.267-.508-.4-1.137-.4-1.887 0-.712.14-1.327.418-1.843a2.86 2.86 0 0 1 1.155-1.186c.491-.27 1.051-.405 1.678-.405Zm-.044 1.345c-.274 0-.516.068-.725.203a1.29 1.29 0 0 0-.479.59 2.045 2.045 0 0 0-.132.498h2.562a1.873 1.873 0 0 0-.138-.602 1.061 1.061 0 0 0-.418-.516 1.243 1.243 0 0 0-.67-.173Z" clip-rule="evenodd"/>
+  <path fill="#FCFBF8" d="m26.605 9.995 1.342-4.566h1.924L27.628 12h-2.07l-2.33-6.57h1.98l1.397 4.565Zm-13.013.143h2.256c1.632 0 1.421 1.837 1.418 1.861h-5.603V3h1.93v7.138Zm31.516 1.861h-1.862V3h1.862v8.999Z"/>
+  <path fill="url(#a)" fill-rule="evenodd" d="M2.7 3c1.492 0 2.7 1.192 2.7 2.663v1.012h.9c1.49 0 2.7 1.192 2.7 2.662S7.791 12 6.3 12H0V5.663C0 4.193 1.209 3 2.7 3Z" clip-rule="evenodd"/>
+  <defs>
+    <radialGradient id="a" cx="0" cy="0" r="1" gradientTransform="matrix(-1.54236 7.07838 -10.231 -2.15602 4.627 5.022)" gradientUnits="userSpaceOnUse">
+      <stop offset=".106" stop-color="#FE7B02"/>
+      <stop offset=".394" stop-color="#FE3F21"/>
+      <stop offset=".608" stop-color="#F858BC"/>
+      <stop offset=".929" stop-color="#575ECF"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+</span>
+	</a>
+	
+	<span id="lovable-badge-divider" aria-hidden="true"></span>
+	
+	<button 
+		id="lovable-badge-close"
+		aria-label="Dismiss"
+		title="Dismiss"
+		type="button">
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+			<path d="M10.646 4.646a.5.5 0 1 1 .707.708L8.707 8l2.646 2.646a.5.5 0 1 1-.707.707L8 8.707l-2.646 2.646a.5.5 0 1 1-.708-.707L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708L8 7.293l2.646-2.647Z"/>
+		</svg>
+	</button>
+</aside>
+<script>
+	(() => {
+		if (window.self !== window.top || navigator.userAgent.includes('puppeteer')) {
+			const badge = document.querySelector('#lovable-badge');
+			if (badge) {
+				badge.style.display = 'none';
+			}
+			return;
+		}
+
+		const closeButton = document.querySelector('#lovable-badge-close');
+		if (closeButton) {
+			closeButton.addEventListener('click', function(event) {
+				event.preventDefault();
+				event.stopPropagation();
+				const badge = document.querySelector('#lovable-badge');
+				if (badge) {
+					badge.classList.add('closing');
+					setTimeout(function() {
+						if (badge) {
+							badge.style.display = 'none';
+						}
+					}, 240);
+				}
+			});
+		}
+	})();
+</script>
+</body></html>
